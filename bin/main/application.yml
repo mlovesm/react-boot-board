@@ -1,0 +1,12 @@
+spring:
+ datasource:
+  driverClassName: com.mysql.jdbc.Driver
+  url: jdbc:mysql://192.168.0.147:3306/ibsdata?characterEncoding=utf8
+  username: root
+  password: 1234
+  
+ jpa:
+  show-sql: true
+  hibernate:
+    ddl-auto: update
+server:  port: 8081
