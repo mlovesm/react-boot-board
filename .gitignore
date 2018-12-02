@@ -11,7 +11,7 @@
 .springBeans
 .sts4-cache
 
-bin/
+/bin/
 
 ### IntelliJ IDEA ###
 .idea
@@ -26,3 +26,4 @@ bin/
 /dist/
 /nbdist/
 /.nb-gradle/
+/settings.gradle
