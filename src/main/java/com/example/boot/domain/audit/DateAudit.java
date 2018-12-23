@@ -3,6 +3,7 @@ package com.example.boot.domain.audit;
 import java.io.Serializable;
 import java.time.Instant;
 
+import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 
@@ -27,9 +28,11 @@ import lombok.Setter;
 public abstract class DateAudit implements Serializable {
 
     @CreatedDate
+    @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
     @LastModifiedDate
+    @Column(nullable = false)
     private Instant updatedAt;
 
 }

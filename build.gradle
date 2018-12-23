@@ -32,6 +32,7 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
 	implementation('org.springframework.boot:spring-boot-starter-security')
 	implementation('org.springframework.boot:spring-boot-starter-web')
+	implementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
 	implementation('org.springframework.boot:spring-boot-starter-websocket')
 	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 	runtimeOnly('org.springframework.boot:spring-boot-devtools')
