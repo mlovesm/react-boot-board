@@ -1,7 +1,5 @@
 package com.example.boot.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,9 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.boot.domain.ContentCategory;
 import com.example.boot.domain.VodRepo;
 import com.example.boot.payload.UserIdentityAvailability;
 import com.example.boot.payload.UserSummary;
+import com.example.boot.repository.ContentCategoryRepository;
 import com.example.boot.repository.UserRepository;
 import com.example.boot.repository.VODRepository;
 import com.example.boot.security.CurrentUser;
@@ -29,6 +29,9 @@ public class UserController {
     
 	@Autowired
 	private VODRepository vodRepository;
+	
+	@Autowired
+	private ContentCategoryRepository contentCategoryRepository;
 
 //    @Autowired
 //    private PollRepository pollRepository;
@@ -60,8 +63,9 @@ public class UserController {
     }
     
   @GetMapping("/vod/list")
-  public List<VodRepo> getTest() {
-	  List<VodRepo> list= vodRepository.findByIdx(1L);
+  public Iterable<ContentCategory> getTest() {
+	  Iterable<VodRepo> reglist= vodRepository.findByRegId("metalgs");
+	  Iterable<ContentCategory> list= contentCategoryRepository.findByIdx(1);
 	  System.out.println(list);
 	  return list;
   }

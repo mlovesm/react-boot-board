@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import com.example.boot.domain.audit.DateAudit;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +40,8 @@ public class ContentCategory extends DateAudit {
 
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy="contentCategory")
-    private Set<VodRepo> vodReposotory = new HashSet<>();
+    @JsonManagedReference
+    private Set<VodRepo> vodRepository = new HashSet<>();
 
 
 }

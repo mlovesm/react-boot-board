@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.example.boot.domain.audit.DateAudit;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,23 +43,24 @@ public class VodRepo extends DateAudit {
     private String vod_play_time;
     
     @Column(length= 100)
-    private String reg_id;
+    private String regId;
     
-    private String reg_ip;
+    private String regIp;
     
     @Column(length = 1)
-    private String del_flag;
+    private String delFlag;
     
-    private String trans_option;
+    private String transOption;
     
-    private int favorite_count;
+    private int favoriteCount= 0;
     
-    private int view_count;
+    private int viewCount= 0;
         
     private String main_thumbnail;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="category_idx")
+    @JoinColumn(name ="categoryIdx")
+    @JsonBackReference	//child
     private ContentCategory contentCategory;
 
 
