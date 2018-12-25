@@ -1,7 +1,17 @@
 package com.example.boot.controller;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +26,7 @@ import com.example.boot.repository.UserRepository;
 import com.example.boot.repository.VODRepository;
 import com.example.boot.security.CurrentUser;
 import com.example.boot.security.UserPrincipal;
+import com.example.boot.service.PollService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,15 +43,10 @@ public class UserController {
 	
 	@Autowired
 	private ContentCategoryRepository contentCategoryRepository;
+	
+	@Autowired
+	private PollService pollService;
 
-//    @Autowired
-//    private PollRepository pollRepository;
-//
-//    @Autowired
-//    private VoteRepository voteRepository;
-//
-//    @Autowired
-//    private PollService pollService;
 
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
@@ -63,10 +69,21 @@ public class UserController {
     }
     
   @GetMapping("/vod/list")
-  public Iterable<ContentCategory> getTest() {
-	  Iterable<VodRepo> reglist= vodRepository.findByRegId("metalgs");
-	  Iterable<ContentCategory> list= contentCategoryRepository.findByIdx(1);
-	  System.out.println(list);
+  public Page<VodRepo> getTest(@PageableDefault Pageable pageable, Model model) {
+	  System.out.println("pageable= "+pageable);
+	  System.out.println("model= "+model);
+
+//	  Iterable<VodRepo> list= pollService.getVodRepoList();
+//	  Iterator<VodRepo> itr = list.iterator();
+//      while (itr.hasNext()) {
+//          //System.out.println(itr.next());
+//    	  VodRepo mc = itr.next();
+//          System.out.println("id: " + mc.getIdx());
+//          System.out.println("name: " + mc.getVodTitle());
+//      } // end while
+	  
+	  Page<VodRepo> list= pollService.getCategoryList(pageable);
+	  System.out.println(list.getSize());
 	  return list;
   }
 

@@ -15,6 +15,7 @@ import javax.validation.constraints.Size;
 import com.example.boot.domain.audit.DateAudit;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,17 +31,20 @@ public class VodRepo extends DateAudit {
 
     @NotBlank
     @Column(length= 100)
-    private String vod_path;
+    private String vodPath;
 
     @NotBlank
     @Column(length= 100)
-    private String vod_title;
+    private String vodTitle;
+    
+    @Column(length= 300)
+    private String vodContent;
 
     @Size(max = 40)
-    private String vod_keyword;
+    private String vodKeyword;
 
     @Size(max = 10)
-    private String vod_play_time;
+    private String vodPlayTime;
     
     @Column(length= 100)
     private String regId;
@@ -52,17 +56,37 @@ public class VodRepo extends DateAudit {
     
     private String transOption;
     
-    private int favoriteCount= 0;
+    @Column(columnDefinition = "0")
+    private int favoriteCount;
     
-    private int viewCount= 0;
+    @Column(columnDefinition = "0")
+    private int viewCount;
         
-    private String main_thumbnail;
+    private String mainThumbnail;
+    
+    @Builder
+	public VodRepo(Long idx, @NotBlank String vodPath, @NotBlank String vodTitle, @Size(max = 40) String vodKeyword,
+			@Size(max = 10) String vodPlayTime, String regId, String regIp, String delFlag, String transOption,
+			int favoriteCount, int viewCount, String mainThumbnail) {
+		this.vodPath = vodPath;
+		this.vodTitle = vodTitle;
+		this.vodKeyword = vodKeyword;
+		this.vodPlayTime = vodPlayTime;
+		this.regId = regId;
+		this.regIp = regIp;
+		this.delFlag = delFlag;
+		this.transOption = transOption;
+		this.favoriteCount = favoriteCount;
+		this.viewCount = viewCount;
+		this.mainThumbnail = mainThumbnail;
+	}
 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="categoryIdx")
     @JsonBackReference	//child
     private ContentCategory contentCategory;
-
 
 
 }
