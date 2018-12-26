@@ -8,11 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import com.example.boot.domain.ContentCategory;
 import com.example.boot.domain.VodRepo;
 import com.example.boot.repository.ContentCategoryRepository;
 import com.example.boot.repository.VODRepository;
@@ -28,18 +25,16 @@ public class PollService {
     
     private static final Logger logger = LoggerFactory.getLogger(PollService.class);
 
-//    public Page<Board> findBoardList(Pageable pageable) {
-//        pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1, pageable.getPageSize());
-//        return boardRepository.findAll(pageable);
-//    }
     
 //    public Board findBoardByIdx(Long idx) {
 //        return boardRepository.findById(idx).orElse(new Board());
 //    }
     
     public Page<VodRepo> getCategoryList(Pageable pageable) {
-    	System.out.println("service pageable="+ pageable);
-        pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1, pageable.getPageSize());
+    	System.out.println("service pageable="+ pageable.getSort());
+        pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1, pageable.getPageSize()
+        		, pageable.getSort());
+
 //    	List<ContentCategory> list= contentCategoryRepository.findByIdx(1, pageable);
     	Page<VodRepo> list= vodRepository.findAll(pageable);
     	logger.debug("list="+ list);
