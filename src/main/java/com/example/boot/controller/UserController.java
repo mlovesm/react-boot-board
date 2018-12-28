@@ -1,18 +1,22 @@
 package com.example.boot.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.boot.domain.ContentCategory;
 import com.example.boot.domain.VodRepo;
 import com.example.boot.payload.UserIdentityAvailability;
 import com.example.boot.payload.UserSummary;
@@ -81,11 +85,10 @@ public class UserController {
 	  return list;
   }
   
-//  @GetMapping("/vod/list2")
-//  public List<VodRepo> getCategory() {
-//	  List<VodRepo> category= (List<VodRepo>) pollService.getContentList();
-//	  return category;
-//  }
+  @GetMapping("/vod/list2/{categoryIdx}")
+  public Set<VodRepo> getCategory(@PathVariable long categoryIdx) {
+	  return pollService.createContent(categoryIdx);
+  }
 
 //    @GetMapping("/users/{username}")
 //    public UserProfile getUserProfile(@PathVariable(value = "username") String username) {

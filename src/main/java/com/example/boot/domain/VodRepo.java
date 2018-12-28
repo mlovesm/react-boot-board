@@ -63,11 +63,18 @@ public class VodRepo extends DateAudit {
     private int viewCount;
         
     private String mainThumbnail;
-    
+
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name ="category_idx", nullable = false)
+	@JsonBackReference	//child
+    private ContentCategory contentCategory;
+	
+	
     @Builder
 	public VodRepo(Long idx, @NotBlank String vodPath, @NotBlank String vodTitle, @Size(max = 40) String vodKeyword,
 			@Size(max = 10) String vodPlayTime, String regId, String regIp, String delFlag, String transOption,
-			int favoriteCount, int viewCount, String mainThumbnail) {
+			int favoriteCount, int viewCount, String mainThumbnail, ContentCategory contentCategory) {
 		this.vodPath = vodPath;
 		this.vodTitle = vodTitle;
 		this.vodKeyword = vodKeyword;
@@ -79,14 +86,8 @@ public class VodRepo extends DateAudit {
 		this.favoriteCount = favoriteCount;
 		this.viewCount = viewCount;
 		this.mainThumbnail = mainThumbnail;
+		this.contentCategory = contentCategory;
 	}
-
-
-
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="categoryIdx", nullable = false)
-	@JsonBackReference	//child
-    private ContentCategory contentCategory;
 
 
 }

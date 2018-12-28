@@ -1,6 +1,8 @@
 package com.example.boot.service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.boot.domain.ContentCategory;
 import com.example.boot.domain.VodRepo;
+import com.example.boot.payload.ContentCategoryRequest;
 import com.example.boot.repository.ContentCategoryRepository;
 import com.example.boot.repository.VODRepository;
 
@@ -42,9 +45,20 @@ public class PollService {
     	return list;
     }
     
-//    public Page<VodRepo> getVodRepoIdx(@PathVariable int categoryIdx, Pageable pageable) {
-//        return vodRepository.findByCategoryIdx(categoryIdx, pageable);
-//    }
+    public Set<VodRepo> createContent(long categoryIdx) {
+//        ContentCategory categoryRequest = ContentCategory.builder()
+//        		.category_name("test")
+//        		.parendId(1)
+//        		.position(0).build();
+//
+//        contentCategoryRepository.save(categoryRequest);
+
+        Optional<ContentCategory> category = contentCategoryRepository.findById(categoryIdx);
+
+        Set<VodRepo> vodList = category.get().getVodRepository();
+        
+        return vodList;
+    }
 
 //    public Poll createPoll(PollRequest pollRequest) {
 //        Poll poll = new Poll();
