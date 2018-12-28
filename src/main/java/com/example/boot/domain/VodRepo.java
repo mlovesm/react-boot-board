@@ -84,8 +84,8 @@ public class VodRepo extends DateAudit {
 
 
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="categoryIdx")
-    @JsonBackReference	//child
+    @JoinColumn(name ="categoryIdx", nullable = false)
+	@JsonBackReference	//child
     private ContentCategory contentCategory;
 
 

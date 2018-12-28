@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.boot.domain.ContentCategory;
 
 public interface ContentCategoryRepository extends JpaRepository<ContentCategory, Long> {
-	List<ContentCategory> findByIdx(long Idx, Pageable pageable);
+//	List<ContentCategory> findByIdx(long Idx, Pageable pageable);
 }

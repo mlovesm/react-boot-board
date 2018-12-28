@@ -9,7 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import com.example.boot.domain.ContentCategory;
 import com.example.boot.domain.VodRepo;
 import com.example.boot.repository.ContentCategoryRepository;
 import com.example.boot.repository.VODRepository;
@@ -30,22 +32,19 @@ public class PollService {
 //        return boardRepository.findById(idx).orElse(new Board());
 //    }
     
-    public Page<VodRepo> getCategoryList(Pageable pageable) {
+    public Page<VodRepo> getVodRepoList(Pageable pageable) {
     	System.out.println("service pageable="+ pageable.getSort());
         pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1, pageable.getPageSize()
         		, pageable.getSort());
 
-//    	List<ContentCategory> list= contentCategoryRepository.findByIdx(1, pageable);
     	Page<VodRepo> list= vodRepository.findAll(pageable);
-    	logger.debug("list="+ list);
+    	logger.debug("list="+ list); 
     	return list;
     }
     
-    public List<VodRepo> getVodRepoList() {
-    	List<VodRepo> list= vodRepository.findAll();
-    	logger.debug("list="+ list);
-    	return list;
-    }
+//    public Page<VodRepo> getVodRepoIdx(@PathVariable int categoryIdx, Pageable pageable) {
+//        return vodRepository.findByCategoryIdx(categoryIdx, pageable);
+//    }
 
 //    public Poll createPoll(PollRequest pollRequest) {
 //        Poll poll = new Poll();
