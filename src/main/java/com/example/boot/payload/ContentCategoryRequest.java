@@ -1,7 +1,5 @@
 package com.example.boot.payload;
 
-import javax.validation.constraints.NotBlank;
-
 import com.example.boot.domain.ContentCategory;
 
 import lombok.Getter;
