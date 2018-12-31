@@ -1,6 +1,8 @@
 package com.example.boot.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,10 +71,9 @@ public class UserController {
         return new UserIdentityAvailability(isAvailable);
     }
     
-  @GetMapping("/vod/list")
-  public Page<VodRepo> getTest(@PageableDefault Pageable pageable, Model model) {
-	  System.out.println("pageable= "+pageable);
-	  System.out.println("model= "+model);
+	@GetMapping("/vod/list")
+	public Page<VodRepo> getTest(@PageableDefault Pageable pageable) {
+		System.out.println("pageable= "+pageable);
 
 //	  Iterable<VodRepo> list= pollService.getVodRepoList();
 //	  Iterator<VodRepo> itr = list.iterator();
@@ -83,18 +84,43 @@ public class UserController {
 //          System.out.println("name: " + mc.getVodTitle());
 //      } // end while
 	  
-	  Page<VodRepo> list= pollService.getVodRepoList(pageable);
-	  return list;
-  }
-  
-  @GetMapping("/vod/contentCategory")
-  public ResponseEntity<JSONObject> getCategory() {
-	  JSONObject jsonObject = new JSONObject();
+		Page<VodRepo> list= pollService.getVodRepoList(pageable);
+		return list;
+	}
+	
+	@GetMapping("/vod/list/{categoryIdx}")
+	public ResponseEntity<JSONObject> getIdxCategory(@PathVariable int categoryIdx, @PageableDefault Pageable pageable) {
+		JSONObject jsonObject = new JSONObject();
 	  
-	  List<ContentCategory> categoryList = pollService.getContentCategory();
-	  jsonObject.put("data", categoryList);
-	  return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK); 
-  }
+		try {
+			List<ContentCategory> list= pollService.getIdxVodRepoList(categoryIdx, pageable);
+			jsonObject.put("data", list);
+			jsonObject.put("status", "success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			jsonObject.put("status", "failed");
+		}
+
+		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK); 
+	}
+  
+	@GetMapping("/vod/contentCategory")
+	public ResponseEntity<JSONObject> getCategory() {
+		JSONObject jsonObject = new JSONObject();
+	  
+		try {
+			List<HashMap<String, Object>> categoryList = pollService.getContentCategory();
+			jsonObject.put("data", categoryList);
+			jsonObject.put("status", "success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			jsonObject.put("data", null);
+			jsonObject.put("status", "failed");
+		}
+
+		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK); 
+	}
+
 
 //    @GetMapping("/users/{username}")
 //    public UserProfile getUserProfile(@PathVariable(value = "username") String username) {

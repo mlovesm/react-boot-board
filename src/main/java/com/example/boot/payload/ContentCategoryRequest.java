@@ -1,5 +1,7 @@
 package com.example.boot.payload;
 
+import java.util.List;
+
 import com.example.boot.domain.ContentCategory;
 
 import lombok.Getter;
@@ -11,17 +13,21 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ContentCategoryRequest {
 
-    private int parendId;
+    private int parentId;
 
     private int position;
 
     private String category_name;
 
     private String property;
+    
+    private int vodSize;
+    
+    private List<ContentCategoryRequest> children;
 
     public ContentCategory toEntity(){
         return ContentCategory.builder()
-                .parendId(parendId)
+                .parentId(parentId)
                 .position(position)
                 .category_name(category_name)
                 .property(property)

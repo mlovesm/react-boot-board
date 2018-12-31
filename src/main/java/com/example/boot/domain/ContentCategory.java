@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 
 import com.example.boot.domain.audit.DateAudit;
 
@@ -28,7 +27,7 @@ public class ContentCategory extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    private int parendId;
+    private int parentId;
 
     private int position;
 
@@ -42,9 +41,9 @@ public class ContentCategory extends DateAudit {
     private Set<VodRepo> vodRepository = new HashSet<>();
 
     @Builder
-	public ContentCategory(int parendId, int position, String category_name, String property,
+	public ContentCategory(int parentId, int position, String category_name, String property,
 			Set<VodRepo> vodRepository) {
-		this.parendId = parendId;
+		this.parentId = parentId;
 		this.position = position;
 		this.category_name = category_name;
 		this.property = property;

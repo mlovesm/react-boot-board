@@ -1,6 +1,10 @@
 package com.example.boot.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,9 +45,59 @@ public class PollService {
     	return list;
     }
     
-    public List<ContentCategory> getContentCategory() {
-        List<ContentCategory> categoryList = contentCategoryRepository.findAll();
-        return categoryList; 
+    public List<ContentCategory> getIdxVodRepoList(int categoryIdx, Pageable pageable) {
+    	System.out.println("service pageable="+ pageable.getSort());
+        pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1, pageable.getPageSize()
+        		, pageable.getSort());
+
+        List<ContentCategory> categoryList = contentCategoryRepository.findByIdx((long) categoryIdx);
+        
+    	
+    	return categoryList;
+    }
+    
+    public List<HashMap<String, Object>> getContentCategory() {
+    	int protectedNum = 1;	// 무한 호출 예외 방지
+        List<ContentCategory> parentCategoryList = contentCategoryRepository.findByParentId(0);
+        List<HashMap<String, Object>> mapList = new ArrayList<>();
+        for (int i = 0; i < parentCategoryList.size(); i++) {
+        	HashMap<String, Object> map = new HashMap<>();
+        	map.put("idx", parentCategoryList.get(i).getIdx());
+        	Long idx= parentCategoryList.get(i).getIdx();
+        	map.put("categoryName", parentCategoryList.get(i).getCategory_name());
+        	map.put("parentId", parentCategoryList.get(i).getParentId());
+        	map.put("vodSize", parentCategoryList.get(i).getVodRepository().size());
+        	
+        	
+    		List<HashMap<String, Object>> childMapList = new ArrayList<>();
+    		childMapList = getContentChildCategory(protectedNum, idx.intValue(), parentCategoryList.get(i).getProperty());
+    		map.put("children", childMapList);
+        	
+        	mapList.add(i, map);
+		}
+        return mapList; 
+    }
+    
+    public List<HashMap<String, Object>> getContentChildCategory(int protectedNum, int parentId, String property) {
+		List<HashMap<String, Object>> childMapList = new ArrayList<>();
+		List<ContentCategory> childrenList= contentCategoryRepository.findByParentId(parentId);
+		for (int j = 0; j < childrenList.size(); j++) {
+			HashMap<String, Object> childMap = new HashMap<>();
+			childMap.put("idx", childrenList.get(j).getIdx());
+			Long idx= childrenList.get(j).getIdx();
+			childMap.put("categoryName", childrenList.get(j).getCategory_name());
+        	childMap.put("parentId", childrenList.get(j).getParentId());
+        	childMap.put("vodSize", childrenList.get(j).getVodRepository().size());
+        	
+        	if(property.equals("0")) {
+        		childMap.put("children", getContentChildCategory(protectedNum,
+        				idx.intValue(), childrenList.get(j).getProperty()));
+        		if(protectedNum == 3) break;
+        		protectedNum++;
+        	}
+        	childMapList.add(j, childMap);
+		}
+        return childMapList; 
     }
 
 //    public Poll createPoll(PollRequest pollRequest) {
