@@ -27,3 +27,4 @@
 /nbdist/
 /.nb-gradle/
 /settings.gradle
+/application.log

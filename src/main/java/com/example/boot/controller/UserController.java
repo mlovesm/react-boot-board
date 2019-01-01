@@ -1,5 +1,6 @@
 package com.example.boot.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -7,7 +8,9 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -88,20 +91,23 @@ public class UserController {
 		return list;
 	}
 	
-	@GetMapping("/vod/list/{categoryIdx}")
-	public ResponseEntity<JSONObject> getIdxCategory(@PathVariable int categoryIdx, @PageableDefault Pageable pageable) {
+	@GetMapping("/vod/list/2")
+	public Page<VodRepo> getIdxCategory(Pageable pageable) {
 		JSONObject jsonObject = new JSONObject();
-	  
+		pageable = PageRequest.of(0, 10);
+		
+		Page<VodRepo> list= pollService.getIdxVodRepoList("≈∏¿Ã∆≤17", pageable);
 		try {
-			List<ContentCategory> list= pollService.getIdxVodRepoList(categoryIdx, pageable);
+//			List<ContentCategory> list= pollService.getIdxVodRepoList(categoryIdx, pageable);
+			
 			jsonObject.put("data", list);
 			jsonObject.put("status", "success");
 		} catch (Exception e) {
 			e.printStackTrace();
 			jsonObject.put("status", "failed");
 		}
-
-		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK); 
+		return list;
+//		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK); 
 	}
   
 	@GetMapping("/vod/contentCategory")

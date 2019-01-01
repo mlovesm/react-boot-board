@@ -3,8 +3,6 @@ package com.example.boot.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.boot.domain.ContentCategory;
@@ -45,11 +44,21 @@ public class PollService {
     	return list;
     }
     
+    public Page<VodRepo> getIdxVodRepoList(String vodTitle, Pageable pageable) {
+    	System.out.println("pageable="+ pageable.getSort());
+//    	pageable= PageRequest.of(0, 10, Sort.by("vodTitle").descending());
+    	
+    	Page<VodRepo> list= vodRepository.findByVodTitle(vodTitle, pageable);
+        
+    	return list;
+    }
+    
     public List<ContentCategory> getIdxVodRepoList(int categoryIdx, Pageable pageable) {
     	System.out.println("service pageable="+ pageable.getSort());
         pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1, pageable.getPageSize()
         		, pageable.getSort());
 
+//        ContentCategory categoryList = contentCategoryRepository.findById(categoryIdx).orElse(new ContentCategory());
         List<ContentCategory> categoryList = contentCategoryRepository.findByIdx((long) categoryIdx);
         
     	
