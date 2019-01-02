@@ -1,34 +1,25 @@
 package com.example.boot.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.boot.domain.ContentCategory;
 import com.example.boot.domain.VodRepo;
 import com.example.boot.payload.UserIdentityAvailability;
 import com.example.boot.payload.UserSummary;
-import com.example.boot.repository.ContentCategoryRepository;
 import com.example.boot.repository.UserRepository;
-import com.example.boot.repository.VODRepository;
 import com.example.boot.security.CurrentUser;
 import com.example.boot.security.UserPrincipal;
 import com.example.boot.service.PollService;
@@ -43,12 +34,6 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
-    
-	@Autowired
-	private VODRepository vodRepository;
-	
-	@Autowired
-	private ContentCategoryRepository contentCategoryRepository;
 	
 	@Autowired
 	private PollService pollService;
@@ -91,27 +76,23 @@ public class UserController {
 		return list;
 	}
 	
-	@GetMapping("/vod/list/2")
-	public Page<VodRepo> getIdxCategory(Pageable pageable) {
+	@GetMapping("/vod/list/{categoryIdx}")
+	public ResponseEntity<?> contentCategory(@PathVariable(value = "categoryIdx") int categoryIdx, Pageable pageable) {
 		JSONObject jsonObject = new JSONObject();
-		pageable = PageRequest.of(0, 10);
+	  
+		Page<VodRepo> categoryList = pollService.getIdxVodRepoList(categoryIdx, pageable);
 		
-		Page<VodRepo> list= pollService.getIdxVodRepoList("≈∏¿Ã∆≤17", pageable);
 		try {
-//			List<ContentCategory> list= pollService.getIdxVodRepoList(categoryIdx, pageable);
-			
-			jsonObject.put("data", list);
 			jsonObject.put("status", "success");
 		} catch (Exception e) {
 			e.printStackTrace();
 			jsonObject.put("status", "failed");
 		}
-		return list;
-//		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK); 
+		return new ResponseEntity<Page<VodRepo>>(categoryList, HttpStatus.OK); 
 	}
   
 	@GetMapping("/vod/contentCategory")
-	public ResponseEntity<JSONObject> getCategory() {
+	public ResponseEntity<JSONObject> contentCategory() {
 		JSONObject jsonObject = new JSONObject();
 	  
 		try {

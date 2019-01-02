@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.boot.domain.ContentCategory;
@@ -30,10 +29,6 @@ public class PollService {
     private static final Logger logger = LoggerFactory.getLogger(PollService.class);
 
     
-//    public Board findBoardByIdx(Long idx) {
-//        return boardRepository.findById(idx).orElse(new Board());
-//    }
-    
     public Page<VodRepo> getVodRepoList(Pageable pageable) {
     	System.out.println("service pageable="+ pageable.getSort());
         pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1, pageable.getPageSize()
@@ -44,25 +39,14 @@ public class PollService {
     	return list;
     }
     
-    public Page<VodRepo> getIdxVodRepoList(String vodTitle, Pageable pageable) {
-    	System.out.println("pageable="+ pageable.getSort());
-//    	pageable= PageRequest.of(0, 10, Sort.by("vodTitle").descending());
-    	
-    	Page<VodRepo> list= vodRepository.findByVodTitle(vodTitle, pageable);
-        
-    	return list;
-    }
-    
-    public List<ContentCategory> getIdxVodRepoList(int categoryIdx, Pageable pageable) {
-    	System.out.println("service pageable="+ pageable.getSort());
+    public Page<VodRepo> getIdxVodRepoList(int categoryIdx, Pageable pageable) {
         pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1, pageable.getPageSize()
         		, pageable.getSort());
-
-//        ContentCategory categoryList = contentCategoryRepository.findById(categoryIdx).orElse(new ContentCategory());
-        List<ContentCategory> categoryList = contentCategoryRepository.findByIdx((long) categoryIdx);
-        
     	
-    	return categoryList;
+    	ContentCategory category = getIdxContentCategory(categoryIdx);
+    	Page<VodRepo> list= vodRepository.findByContentCategory(category, pageable);
+        
+    	return list;
     }
     
     public List<HashMap<String, Object>> getContentCategory() {
@@ -107,6 +91,14 @@ public class PollService {
         	childMapList.add(j, childMap);
 		}
         return childMapList; 
+    }
+    
+    public ContentCategory getIdxContentCategory(int categoryIdx) {
+
+    	ContentCategory category = 
+    			contentCategoryRepository.findById((long) categoryIdx).orElse(new ContentCategory());
+    	
+    	return category;
     }
 
 //    public Poll createPoll(PollRequest pollRequest) {

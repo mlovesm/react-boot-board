@@ -12,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.example.boot.domain.audit.DateAudit;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -36,7 +37,7 @@ public class ContentCategory extends DateAudit {
     private String property;
 
     
-//    @JsonManagedReference
+    @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy="contentCategory")
     private Set<VodRepo> vodRepository = new HashSet<>();
 
