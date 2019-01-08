@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -89,6 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                		"/images/**", "/js/**", "/console/**").permitAll()
 		        .antMatchers("/api/auth/**").permitAll()
 		        .antMatchers("/api/vod/**").permitAll()
+		        .antMatchers("/file/**").permitAll()
                 .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
                 	.permitAll()
                 .anyRequest().authenticated()
