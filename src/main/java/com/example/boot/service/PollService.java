@@ -55,9 +55,9 @@ public class PollService {
         List<HashMap<String, Object>> mapList = new ArrayList<>();
         for (int i = 0; i < parentCategoryList.size(); i++) {
         	HashMap<String, Object> map = new HashMap<>();
-        	map.put("idx", parentCategoryList.get(i).getIdx());
+        	map.put("value", parentCategoryList.get(i).getIdx());
         	Long idx= parentCategoryList.get(i).getIdx();
-        	map.put("categoryName", parentCategoryList.get(i).getCategory_name());
+        	map.put("label", parentCategoryList.get(i).getCategory_name());
         	map.put("parentId", parentCategoryList.get(i).getParentId());
         	map.put("vodSize", parentCategoryList.get(i).getVodRepository().size());
         	
@@ -76,9 +76,9 @@ public class PollService {
 		List<ContentCategory> childrenList= contentCategoryRepository.findByParentId(parentId);
 		for (int j = 0; j < childrenList.size(); j++) {
 			HashMap<String, Object> childMap = new HashMap<>();
-			childMap.put("idx", childrenList.get(j).getIdx());
+			childMap.put("value", childrenList.get(j).getIdx());
 			Long idx= childrenList.get(j).getIdx();
-			childMap.put("categoryName", childrenList.get(j).getCategory_name());
+			childMap.put("label", childrenList.get(j).getCategory_name());
         	childMap.put("parentId", childrenList.get(j).getParentId());
         	childMap.put("vodSize", childrenList.get(j).getVodRepository().size());
         	
