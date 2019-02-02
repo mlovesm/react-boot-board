@@ -43,7 +43,7 @@ public class PollService {
         pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1, pageable.getPageSize()
         		, pageable.getSort());
     	
-    	ContentCategory category = getIdxContentCategory(categoryIdx);
+    	ContentCategory category = getContentCategoryItem(categoryIdx);
     	Page<VodRepo> list= vodRepository.findByContentCategory(category, pageable);
         
     	return list;
@@ -57,7 +57,7 @@ public class PollService {
         	HashMap<String, Object> map = new HashMap<>();
         	map.put("value", parentCategoryList.get(i).getIdx());
         	Long idx= parentCategoryList.get(i).getIdx();
-        	map.put("label", parentCategoryList.get(i).getCategory_name());
+        	map.put("label", parentCategoryList.get(i).getCategoryName());
         	map.put("parentId", parentCategoryList.get(i).getParentId());
         	map.put("vodSize", parentCategoryList.get(i).getVodRepository().size());
         	
@@ -71,6 +71,21 @@ public class PollService {
         return mapList; 
     }
     
+    // 카테고리 아이템
+    public ContentCategory getContentCategoryItem(int idx) {
+    	ContentCategory category = 
+    			contentCategoryRepository.findById((long) idx).orElse(new ContentCategory());
+
+    	return category;
+    }
+    
+    // parentId별 카테고리 count
+    public long getContentCategoryParentIdCount(int parentId) {
+    	long countChildItem = contentCategoryRepository.countByParentId(parentId);
+
+    	return countChildItem;
+    }
+    
     public List<HashMap<String, Object>> getContentChildCategory(int protectedNum, int parentId, String property) {
 		List<HashMap<String, Object>> childMapList = new ArrayList<>();
 		List<ContentCategory> childrenList= contentCategoryRepository.findByParentId(parentId);
@@ -78,28 +93,21 @@ public class PollService {
 			HashMap<String, Object> childMap = new HashMap<>();
 			childMap.put("value", childrenList.get(j).getIdx());
 			Long idx= childrenList.get(j).getIdx();
-			childMap.put("label", childrenList.get(j).getCategory_name());
+			childMap.put("label", childrenList.get(j).getCategoryName());
         	childMap.put("parentId", childrenList.get(j).getParentId());
         	childMap.put("vodSize", childrenList.get(j).getVodRepository().size());
         	
         	if(property.equals("0")) {
         		childMap.put("children", getContentChildCategory(protectedNum,
         				idx.intValue(), childrenList.get(j).getProperty()));
-        		if(protectedNum == 3) break;
+        		if(protectedNum == 7) break;
         		protectedNum++;
         	}
         	childMapList.add(j, childMap);
 		}
         return childMapList; 
     }
-    
-    public ContentCategory getIdxContentCategory(int categoryIdx) {
 
-    	ContentCategory category = 
-    			contentCategoryRepository.findById((long) categoryIdx).orElse(new ContentCategory());
-    	
-    	return category;
-    }
 
 //    public Poll createPoll(PollRequest pollRequest) {
 //        Poll poll = new Poll();

@@ -17,7 +17,7 @@ public class ContentCategoryRequest {
 
     private int position;
 
-    private String category_name;
+    private String categoryName;
 
     private String property;
     
@@ -29,7 +29,7 @@ public class ContentCategoryRequest {
         return ContentCategory.builder()
                 .parentId(parentId)
                 .position(position)
-                .category_name(category_name)
+                .categoryName(categoryName)
                 .property(property)
                 .build();
     }

@@ -3,6 +3,8 @@ package com.example.boot.controller;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,13 +14,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.boot.domain.ContentCategory;
 import com.example.boot.domain.VodRepo;
+import com.example.boot.payload.ApiResponse;
+import com.example.boot.payload.ContentCategoryRequest;
 import com.example.boot.payload.UserIdentityAvailability;
 import com.example.boot.payload.UserSummary;
+import com.example.boot.repository.ContentCategoryRepository;
 import com.example.boot.repository.UserRepository;
 import com.example.boot.security.CurrentUser;
 import com.example.boot.security.UserPrincipal;
@@ -34,6 +42,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private ContentCategoryRepository contentCategoryRepository;
 	
 	@Autowired
 	private PollService pollService;
@@ -107,6 +118,30 @@ public class UserController {
 
 		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK); 
 	}
+	
+	@GetMapping("/vod/contentCategory/{idx}")
+	public ContentCategory contentCategoryItem(@PathVariable(value = "idx") int idx) {	  
+		ContentCategory category = pollService.getContentCategoryItem(idx);
+		return category; 
+	}
+	
+	@GetMapping("/category/contentCategoryParentIdCount/{parentId}")
+	public long contentCategoryParentIdCount(@PathVariable(value = "parentId") int parentId) {	  
+		long count = pollService.getContentCategoryParentIdCount(parentId);
+		return count; 
+	}
+	
+	// 카테고리 등록
+    @PostMapping("/category/contentCategory")
+    public ResponseEntity<?> createContentCategory(@Valid @RequestBody ContentCategoryRequest categoryRequest) {
+
+    	System.out.println("categoryRequest="+categoryRequest.getCategoryName());
+    	System.out.println("categoryRequest="+categoryRequest.getParentId());
+    	
+        contentCategoryRepository.save(categoryRequest.toEntity());
+        
+    	return ResponseEntity.ok().body(new ApiResponse(true, "Category created successfully"));
+    }
 
 
 //    @GetMapping("/users/{username}")

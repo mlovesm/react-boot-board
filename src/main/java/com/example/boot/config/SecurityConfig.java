@@ -88,6 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                		"/images/**", "/js/**", "/console/**").permitAll()
 		        .antMatchers("/api/auth/**").permitAll()
 		        .antMatchers("/api/vod/**").permitAll()
+		        .antMatchers("/api/category/**").permitAll()
 		        .antMatchers("/file/**").permitAll()
                 .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
                 	.permitAll()

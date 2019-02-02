@@ -32,7 +32,7 @@ public class ContentCategory extends DateAudit {
 
     private int position;
 
-    private String category_name;
+    private String categoryName;
 
     private String property;
 
@@ -42,11 +42,11 @@ public class ContentCategory extends DateAudit {
     private Set<VodRepo> vodRepository = new HashSet<>();
 
     @Builder
-	public ContentCategory(int parentId, int position, String category_name, String property,
+	public ContentCategory(int parentId, int position, String categoryName, String property,
 			Set<VodRepo> vodRepository) {
 		this.parentId = parentId;
 		this.position = position;
-		this.category_name = category_name;
+		this.categoryName = categoryName;
 		this.property = property;
 		this.vodRepository = vodRepository;
 	}
