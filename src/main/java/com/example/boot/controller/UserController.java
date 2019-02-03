@@ -12,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 
 @Slf4j
+@SuppressWarnings({ "unchecked", "rawtypes" })
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -125,22 +127,40 @@ public class UserController {
 		return category; 
 	}
 	
-	@GetMapping("/category/contentCategoryParentIdCount/{parentId}")
-	public long contentCategoryParentIdCount(@PathVariable(value = "parentId") int parentId) {	  
-		long count = pollService.getContentCategoryParentIdCount(parentId);
-		return count; 
+	@GetMapping("/category/contentCategoryMaxPosition/{parentId}")
+	public int contentCategoryMaxPosition(@PathVariable(value = "parentId") int parentId) {	  
+		ContentCategory categoryItem = pollService.getContentCategoryMaxPosition(parentId);
+		int position = 1;
+		if (categoryItem != null) {
+			position = categoryItem.getPosition()+1;
+		}
+		return position;
 	}
 	
 	// 카테고리 등록
     @PostMapping("/category/contentCategory")
     public ResponseEntity<?> createContentCategory(@Valid @RequestBody ContentCategoryRequest categoryRequest) {
-
-    	System.out.println("categoryRequest="+categoryRequest.getCategoryName());
-    	System.out.println("categoryRequest="+categoryRequest.getParentId());
-    	
-        contentCategoryRepository.save(categoryRequest.toEntity());
-        
+    	try {
+    		contentCategoryRepository.save(categoryRequest.toEntity());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+            return new ResponseEntity(new ApiResponse(false, "Category created failed"),HttpStatus.BAD_REQUEST);
+		}   
     	return ResponseEntity.ok().body(new ApiResponse(true, "Category created successfully"));
+    }
+    
+    // 카테고리 삭제
+	@DeleteMapping("/category/contentCategory")
+    public ResponseEntity<?> removeContentCategory(@RequestParam(value = "idx") long idx) {
+    	try {
+			pollService.removeContentCategory(idx);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+            return new ResponseEntity(new ApiResponse(false, "Category removed failed"),HttpStatus.BAD_REQUEST);
+		}
+    	return ResponseEntity.ok().body(new ApiResponse(true, "Category removed successfully"));
     }
 
 

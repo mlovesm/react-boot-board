@@ -2,7 +2,9 @@ package com.example.boot.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,16 +53,16 @@ public class PollService {
     
     public List<HashMap<String, Object>> getContentCategory() {
     	int protectedNum = 1;	// 무한 호출 예외 방지
-        List<ContentCategory> parentCategoryList = contentCategoryRepository.findByParentId(0);
+        List<ContentCategory> parentCategoryList = contentCategoryRepository.findByParentIdOrderByIdx(0);
         List<HashMap<String, Object>> mapList = new ArrayList<>();
+
         for (int i = 0; i < parentCategoryList.size(); i++) {
-        	HashMap<String, Object> map = new HashMap<>();
+        	LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         	map.put("value", parentCategoryList.get(i).getIdx());
         	Long idx= parentCategoryList.get(i).getIdx();
         	map.put("label", parentCategoryList.get(i).getCategoryName());
         	map.put("parentId", parentCategoryList.get(i).getParentId());
-        	map.put("vodSize", parentCategoryList.get(i).getVodRepository().size());
-        	
+        	map.put("vodSize", parentCategoryList.get(i).getVodRepository().size());	
         	
     		List<HashMap<String, Object>> childMapList = new ArrayList<>();
     		childMapList = getContentChildCategory(protectedNum, idx.intValue(), parentCategoryList.get(i).getProperty());
@@ -71,26 +73,13 @@ public class PollService {
         return mapList; 
     }
     
-    // 카테고리 아이템
-    public ContentCategory getContentCategoryItem(int idx) {
-    	ContentCategory category = 
-    			contentCategoryRepository.findById((long) idx).orElse(new ContentCategory());
-
-    	return category;
-    }
-    
-    // parentId별 카테고리 count
-    public long getContentCategoryParentIdCount(int parentId) {
-    	long countChildItem = contentCategoryRepository.countByParentId(parentId);
-
-    	return countChildItem;
-    }
-    
+    // 자식 카테고리 데이터
     public List<HashMap<String, Object>> getContentChildCategory(int protectedNum, int parentId, String property) {
 		List<HashMap<String, Object>> childMapList = new ArrayList<>();
-		List<ContentCategory> childrenList= contentCategoryRepository.findByParentId(parentId);
+		List<ContentCategory> childrenList= contentCategoryRepository.findByParentIdOrderByPosition(parentId);
+		
 		for (int j = 0; j < childrenList.size(); j++) {
-			HashMap<String, Object> childMap = new HashMap<>();
+			LinkedHashMap<String, Object> childMap = new LinkedHashMap<>();
 			childMap.put("value", childrenList.get(j).getIdx());
 			Long idx= childrenList.get(j).getIdx();
 			childMap.put("label", childrenList.get(j).getCategoryName());
@@ -106,6 +95,38 @@ public class PollService {
         	childMapList.add(j, childMap);
 		}
         return childMapList; 
+    }
+    
+    // 카테고리 아이템
+    public ContentCategory getContentCategoryItem(int idx) {
+    	ContentCategory category = contentCategoryRepository.findById((long) idx).orElse(new ContentCategory());
+
+    	return category;
+    }
+    
+    // parentId별 카테고리 count
+    public ContentCategory getContentCategoryMaxPosition(int parentId) {
+    	ContentCategory maxPosotionItem = contentCategoryRepository.findTopByParentIdOrderByPositionDesc(parentId);
+
+    	return maxPosotionItem;
+    }
+    
+    // 카테고리 삭제
+    public void removeContentCategory(long idx) { 
+    	ContentCategory category = contentCategoryRepository.findById(idx).orElse(new ContentCategory());
+    	if(category.getIdx() != null) {
+    		contentCategoryRepository.deleteById(idx);	// 상위 삭제
+    		System.out.println("삭제 idx="+idx);
+    	}
+    	List<ContentCategory> categoryList = contentCategoryRepository.findByParentIdOrderByPosition((int)idx);
+    	if(categoryList.size() > 0) {	// 하위 카테고리가 있으면 같이 삭제
+    		contentCategoryRepository.deleteByParentId((int)idx);	// 하위 삭제
+    		System.out.println("삭제 idx="+categoryList.get(0).getIdx());
+    		
+    		idx = categoryList.get(0).getIdx();
+    		// 반복
+    		removeContentCategory(idx);
+    	}
     }
 
 
