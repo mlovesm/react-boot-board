@@ -109,7 +109,7 @@ public class UserController {
 		JSONObject jsonObject = new JSONObject();
 	  
 		try {
-			List<HashMap<String, Object>> categoryList = pollService.getContentCategory();
+			List<HashMap<String, Object>> categoryList = pollService.getContentCategory(0);
 			jsonObject.put("data", categoryList);
 			jsonObject.put("status", "success");
 		} catch (Exception e) {

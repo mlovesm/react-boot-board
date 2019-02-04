@@ -51,50 +51,25 @@ public class PollService {
     	return list;
     }
     
-    public List<HashMap<String, Object>> getContentCategory() {
-    	int protectedNum = 1;	// 무한 호출 예외 방지
-        List<ContentCategory> parentCategoryList = contentCategoryRepository.findByParentIdOrderByIdx(0);
+    public List<HashMap<String, Object>> getContentCategory(long idx) {
+        List<ContentCategory> parentCategoryList = contentCategoryRepository.findByParentIdOrderByIdx((int)idx);
         List<HashMap<String, Object>> mapList = new ArrayList<>();
 
         for (int i = 0; i < parentCategoryList.size(); i++) {
         	LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         	map.put("value", parentCategoryList.get(i).getIdx());
-        	Long idx= parentCategoryList.get(i).getIdx();
+        	long parentIdx= parentCategoryList.get(i).getIdx();
         	map.put("label", parentCategoryList.get(i).getCategoryName());
         	map.put("parentId", parentCategoryList.get(i).getParentId());
         	map.put("vodSize", parentCategoryList.get(i).getVodRepository().size());	
         	
     		List<HashMap<String, Object>> childMapList = new ArrayList<>();
-    		childMapList = getContentChildCategory(protectedNum, idx.intValue(), parentCategoryList.get(i).getProperty());
+    		childMapList = getContentCategory((int)parentIdx);
     		map.put("children", childMapList);
         	
         	mapList.add(i, map);
 		}
         return mapList; 
-    }
-    
-    // 자식 카테고리 데이터
-    public List<HashMap<String, Object>> getContentChildCategory(int protectedNum, int parentId, String property) {
-		List<HashMap<String, Object>> childMapList = new ArrayList<>();
-		List<ContentCategory> childrenList= contentCategoryRepository.findByParentIdOrderByPosition(parentId);
-		
-		for (int j = 0; j < childrenList.size(); j++) {
-			LinkedHashMap<String, Object> childMap = new LinkedHashMap<>();
-			childMap.put("value", childrenList.get(j).getIdx());
-			Long idx= childrenList.get(j).getIdx();
-			childMap.put("label", childrenList.get(j).getCategoryName());
-        	childMap.put("parentId", childrenList.get(j).getParentId());
-        	childMap.put("vodSize", childrenList.get(j).getVodRepository().size());
-        	
-        	if(property.equals("0")) {
-        		childMap.put("children", getContentChildCategory(protectedNum,
-        				idx.intValue(), childrenList.get(j).getProperty()));
-        		if(protectedNum == 7) break;
-        		protectedNum++;
-        	}
-        	childMapList.add(j, childMap);
-		}
-        return childMapList; 
     }
     
     // 카테고리 아이템
