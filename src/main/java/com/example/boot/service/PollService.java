@@ -65,8 +65,9 @@ public class PollService {
         	
     		List<HashMap<String, Object>> childMapList = new ArrayList<>();
     		childMapList = getContentCategory((int)parentIdx);
-    		map.put("children", childMapList);
-        	
+    		if(childMapList.size() > 0) {
+    			map.put("children", childMapList);
+    		}
         	mapList.add(i, map);
 		}
         return mapList; 
