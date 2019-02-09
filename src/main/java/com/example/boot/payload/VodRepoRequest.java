@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.example.boot.domain.ContentCategory;
 import com.example.boot.domain.VodRepo;
 
 import lombok.Getter;
@@ -15,15 +16,17 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VodRepoRequest {
 
-    @NotBlank
     @Column(length= 100)
     private String vodPath;
 
     @NotBlank
     @Column(length= 100)
     private String vodTitle;
+    
+    @Column(length= 300)
+    private String vodContent;
 
-    @Size(max = 40)
+    @Column(length= 300)
     private String vodKeyword;
 
     @Size(max = 10)
@@ -38,17 +41,19 @@ public class VodRepoRequest {
     private String delFlag;
     
     private String transOption;
-    
-    private int favoriteCount= 0;
-    
-    private int viewCount= 0;
         
     private String mainThumbnail;
+    
+    private ContentCategory contentCategory;
 
     public VodRepo toEntity(){
         return VodRepo.builder()
-                .vodPath(vodPath)
-                .vodTitle(vodTitle)
+        		.contentCategory(contentCategory)
+        		.vodTitle(vodTitle)
+        		.vodContent(vodContent)
+        		.mainThumbnail(mainThumbnail)
+        		.vodPlayTime(vodPlayTime)
+        		.vodKeyword(vodKeyword)
                 .build();
     }
 }

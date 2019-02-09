@@ -1,7 +1,5 @@
 package com.example.boot.payload;
 
-import java.util.List;
-
 import com.example.boot.domain.ContentCategory;
 
 import lombok.Getter;
@@ -23,8 +21,6 @@ public class ContentCategoryRequest {
     
     private int vodSize;
     
-    private List<ContentCategoryRequest> children;
-
     public ContentCategory toEntity(){
         return ContentCategory.builder()
                 .parentId(parentId)

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,8 +73,8 @@ public class PollService {
     }
     
     // 카테고리 아이템
-    public ContentCategory getContentCategoryItem(int idx) {
-    	ContentCategory category = contentCategoryRepository.findById((long) idx).orElse(new ContentCategory());
+    public ContentCategory getContentCategoryItem(long idx) {
+    	ContentCategory category = contentCategoryRepository.findById(idx).orElse(new ContentCategory());
 
     	return category;
     }
@@ -103,6 +102,11 @@ public class PollService {
     		// 반복
     		removeContentCategory(idx);
     	}
+    }
+    
+    // vod 추가
+    public void insertVodRepo(long idx) { 
+
     }
 
 

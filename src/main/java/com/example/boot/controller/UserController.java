@@ -27,8 +27,10 @@ import com.example.boot.payload.ApiResponse;
 import com.example.boot.payload.ContentCategoryRequest;
 import com.example.boot.payload.UserIdentityAvailability;
 import com.example.boot.payload.UserSummary;
+import com.example.boot.payload.VodRepoRequest;
 import com.example.boot.repository.ContentCategoryRepository;
 import com.example.boot.repository.UserRepository;
+import com.example.boot.repository.VODRepository;
 import com.example.boot.security.CurrentUser;
 import com.example.boot.security.UserPrincipal;
 import com.example.boot.service.PollService;
@@ -47,6 +49,9 @@ public class UserController {
     
     @Autowired
     private ContentCategoryRepository contentCategoryRepository;
+    
+    @Autowired
+    private VODRepository vodRepository;
 	
 	@Autowired
 	private PollService pollService;
@@ -161,6 +166,27 @@ public class UserController {
             return new ResponseEntity(new ApiResponse(false, "Category removed failed"),HttpStatus.BAD_REQUEST);
 		}
     	return ResponseEntity.ok().body(new ApiResponse(true, "Category removed successfully"));
+    }
+	
+	
+	// mp4 영상 등록
+    @PostMapping("/vod/{categoryIdx}/video")
+    public ResponseEntity<?> insertVodRepository(@PathVariable (value = "categoryIdx") Long categoryIdx, 
+    		@Valid @RequestBody VodRepoRequest vodRepoRequest) {
+    	try {
+    		System.out.println("categoryIdx="+ categoryIdx);
+    		ContentCategory contentCategory = pollService.getContentCategoryItem(categoryIdx);
+    		vodRepoRequest.setContentCategory(contentCategory);
+    		
+    		System.out.println(vodRepoRequest.toEntity().getVodTitle());
+    		System.out.println(vodRepoRequest.toEntity().getContentCategory().getCategoryName());
+    		vodRepository.save(vodRepoRequest.toEntity());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+            return new ResponseEntity(new ApiResponse(false, "Video inserted failed"),HttpStatus.BAD_REQUEST);
+		}   
+    	return ResponseEntity.ok().body(new ApiResponse(true, "Video inserted successfully"));
     }
 
 

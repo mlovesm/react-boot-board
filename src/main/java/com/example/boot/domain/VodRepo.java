@@ -29,7 +29,6 @@ public class VodRepo extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @NotBlank
     @Column(length= 100)
     private String vodPath;
 
@@ -40,7 +39,7 @@ public class VodRepo extends DateAudit {
     @Column(length= 300)
     private String vodContent;
 
-    @Size(max = 40)
+    @Column(length= 300)
     private String vodKeyword;
 
     @Size(max = 10)
@@ -72,11 +71,13 @@ public class VodRepo extends DateAudit {
 	
 	
     @Builder
-	public VodRepo(Long idx, @NotBlank String vodPath, @NotBlank String vodTitle, @Size(max = 40) String vodKeyword,
-			@Size(max = 10) String vodPlayTime, String regId, String regIp, String delFlag, String transOption,
+	public VodRepo(Long idx, String vodPath, @NotBlank String vodTitle, String vodContent,
+			String vodKeyword, @Size(max = 10) String vodPlayTime, 
+			String regId, String regIp, String delFlag, String transOption,
 			int favoriteCount, int viewCount, String mainThumbnail, ContentCategory contentCategory) {
 		this.vodPath = vodPath;
 		this.vodTitle = vodTitle;
+		this.vodContent = vodContent;
 		this.vodKeyword = vodKeyword;
 		this.vodPlayTime = vodPlayTime;
 		this.regId = regId;
