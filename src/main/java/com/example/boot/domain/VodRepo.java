@@ -39,7 +39,7 @@ public class VodRepo extends DateAudit {
     @Column(length= 300)
     private String vodContent;
 
-    @Column(length= 300)
+    @Column(columnDefinition = "TEXT")
     private String vodKeyword;
 
     @Size(max = 10)
@@ -55,10 +55,10 @@ public class VodRepo extends DateAudit {
     
     private String transOption;
     
-    @Column(columnDefinition = "0")
+    @Column(length = 10)
     private int favoriteCount;
     
-    @Column(columnDefinition = "0")
+    @Column(length = 10)
     private int viewCount;
         
     private String mainThumbnail;
