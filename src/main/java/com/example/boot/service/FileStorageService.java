@@ -8,7 +8,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.DecimalFormat;
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.boot.domain.DBFile;
 import com.example.boot.exception.FileStorageException;
 import com.example.boot.exception.MyFileNotFoundException;
 import com.example.boot.file.FileStorageProperties;
 import com.example.boot.payload.DBFileRequest;
 import com.example.boot.repository.DBFileRepository;
-import com.example.boot.repository.VODRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,12 +52,12 @@ public class FileStorageService {
     
 	//폴더 생성 함수
 	private String calcPath() {
-		Calendar cal = Calendar.getInstance();
+		LocalDate currentDate = LocalDate.now();
 		
-		String order = "\\VOD";
-		String yearPath = order + File.separator + cal.get(Calendar.YEAR);
-		String monthPath = yearPath + File.separator + new DecimalFormat("00").format(cal.get(Calendar.MONTH)+1);
-		String datePath = monthPath + File.separator + new DecimalFormat("00").format(cal.get(Calendar.DATE));
+		String order = File.separator + "VOD";
+		String yearPath = order + File.separator + currentDate.getYear();
+		String monthPath = yearPath + File.separator + new DecimalFormat("00").format(currentDate.getMonthValue());
+		String datePath = monthPath + File.separator + new DecimalFormat("00").format(currentDate.getDayOfMonth());
 		
 		makeDir(order, yearPath, monthPath, datePath);
 		
@@ -96,7 +97,7 @@ public class FileStorageService {
             // DB 저장
             DBFileRequest dbFileRequest = new DBFileRequest();
             UUID uid = UUID.randomUUID();
-            dbFileRequest.setFileName(uid.toString());
+            dbFileRequest.setFileName(uid.toString()+"_"+fileName);
             dbFileRequest.setOriginalFileName(fileName);
             dbFileRequest.setFileType(file.getContentType());
             dbFileRequest.setFileSize((int) file.getSize());
@@ -113,10 +114,21 @@ public class FileStorageService {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
     }
+    
+    public DBFile getFile(String fileId) {
+        return dbFileRepository.findById(fileId)
+                .orElseThrow(() -> new MyFileNotFoundException("File not found with id " + fileId));
+    }
 
-    public Resource loadFileAsResource(String fileName) {
+    public Resource loadFileAsResource(String order, String fileName, LocalDateTime createDate) {
         try {
-            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+        	order = "VOD";
+        	String calcPath = File.separator + order + File.separator + createDate.getYear()+
+        			File.separator + new DecimalFormat("00").format(createDate.getMonthValue())+
+        			File.separator + new DecimalFormat("00").format(createDate.getDayOfMonth());
+        	
+            Path filePath = Paths.get(this.fileStorageLocation + calcPath).resolve(fileName).normalize();
+            System.out.println(filePath);
             Resource resource = new UrlResource(filePath.toUri());
             if(resource.exists()) {
                 return resource;

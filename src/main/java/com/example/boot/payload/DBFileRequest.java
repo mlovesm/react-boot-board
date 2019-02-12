@@ -2,7 +2,6 @@ package com.example.boot.payload;
 
 import javax.persistence.Column;
 
-import com.example.boot.domain.ContentCategory;
 import com.example.boot.domain.DBFile;
 
 import lombok.Getter;

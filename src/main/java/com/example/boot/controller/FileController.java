@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.boot.domain.DBFile;
 import com.example.boot.payload.UploadFileResponse;
 import com.example.boot.service.FileStorageService;
 
@@ -55,10 +56,12 @@ public class FileController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/downloadFile/{fileName:.+}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+    @GetMapping("/downloadFile/{order}/{fileId}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileId, @PathVariable String order,
+    		HttpServletRequest request) {
         // Load file as Resource
-        Resource resource = fileStorageService.loadFileAsResource(fileName);
+    	DBFile dbFile = fileStorageService.getFile(fileId);
+    	Resource resource = fileStorageService.loadFileAsResource(order, dbFile.getOriginalFileName(), dbFile.getCreatedAt());
 
         // Try to determine file's content type
         String contentType = null;

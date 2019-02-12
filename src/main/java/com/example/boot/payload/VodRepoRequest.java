@@ -50,10 +50,12 @@ public class VodRepoRequest {
         return VodRepo.builder()
         		.contentCategory(contentCategory)
         		.vodTitle(vodTitle)
+        		.vodPath(vodPath)
         		.vodContent(vodContent)
         		.mainThumbnail(mainThumbnail)
-        		.vodPlayTime(vodPlayTime)
         		.vodKeyword(vodKeyword)
+        		.vodPlayTime(vodPlayTime)
+        		.regId(regId)
                 .build();
     }
 }
