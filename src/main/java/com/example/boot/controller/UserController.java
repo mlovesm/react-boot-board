@@ -36,7 +36,6 @@ import com.example.boot.security.UserPrincipal;
 import com.example.boot.service.PollService;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONObject;
 
 @Slf4j
 @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -95,35 +94,18 @@ public class UserController {
 	}
 	
 	@GetMapping("/vod/list/{categoryIdx}")
-	public ResponseEntity<?> contentCategory(@PathVariable(value = "categoryIdx") int categoryIdx, Pageable pageable) {
-		JSONObject jsonObject = new JSONObject();
-	  
+	public ResponseEntity<?> contentCategory(@PathVariable(value = "categoryIdx") int categoryIdx, Pageable pageable) {	  
 		Page<VodRepo> categoryList = pollService.getIdxVodRepoList(categoryIdx, pageable);
 		
-		try {
-			jsonObject.put("status", "success");
-		} catch (Exception e) {
-			e.printStackTrace();
-			jsonObject.put("status", "failed");
-		}
 		return new ResponseEntity<Page<VodRepo>>(categoryList, HttpStatus.OK); 
 	}
   
 	@GetMapping("/vod/contentCategory")
-	public ResponseEntity<JSONObject> contentCategory() {
-		JSONObject jsonObject = new JSONObject();
+	public ResponseEntity<?> contentCategory() {
 	  
-		try {
-			List<HashMap<String, Object>> categoryList = pollService.getContentCategory(0);
-			jsonObject.put("data", categoryList);
-			jsonObject.put("status", "success");
-		} catch (Exception e) {
-			e.printStackTrace();
-			jsonObject.put("data", null);
-			jsonObject.put("status", "failed");
-		}
+		List<HashMap<String, Object>> categoryList = pollService.getContentCategory(0);
 
-		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK); 
+		return ResponseEntity.ok().body(categoryList);
 	}
 	
 	@GetMapping("/vod/contentCategory/{idx}")
