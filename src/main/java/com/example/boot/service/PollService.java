@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,6 +78,26 @@ public class PollService {
     	ContentCategory category = contentCategoryRepository.findById(idx).orElse(new ContentCategory());
 
     	return category;
+    }
+    
+    // ContentCategory 마지막 노드의 IDX
+	public int getContentCategoryLastNodeIdx() {
+		int categoryIdx = 0;
+		
+		while(true) {
+			ContentCategory lastNodeItem = contentCategoryRepository.findTopByParentIdOrderByIdxDesc(categoryIdx);
+			int itemIdx = Optional.ofNullable(lastNodeItem)
+					.map(ContentCategory::getIdx)
+					.map(Long::intValue).orElse(0);
+				
+			if(itemIdx != 0) {
+				categoryIdx = itemIdx;
+			}else {
+				break;
+			}
+		}
+		System.out.println("categoryIdx="+categoryIdx);
+    	return categoryIdx;
     }
     
     // parentId별 카테고리 count

@@ -2,6 +2,7 @@ package com.example.boot.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -95,9 +96,12 @@ public class UserController {
 	
 	@GetMapping("/vod/list/{categoryIdx}")
 	public ResponseEntity<?> contentCategory(@PathVariable(value = "categoryIdx") int categoryIdx, Pageable pageable) {	  
-		Page<VodRepo> categoryList = pollService.getIdxVodRepoList(categoryIdx, pageable);
+		Page<VodRepo> vodRepoList = pollService.getIdxVodRepoList(categoryIdx, pageable);
+		HashMap< String, Object> hashMap = new HashMap<>();
+		hashMap.put("vodRepoList", vodRepoList);
+		hashMap.put("selectedKey", categoryIdx);
 		
-		return new ResponseEntity<Page<VodRepo>>(categoryList, HttpStatus.OK); 
+		return new ResponseEntity<HashMap< String, Object>>(hashMap, HttpStatus.OK); 
 	}
   
 	@GetMapping("/vod/contentCategory")
@@ -114,6 +118,13 @@ public class UserController {
 		return category; 
 	}
 	
+	// ContentCategory 마지막 노드의 IDX
+	@GetMapping("/category/contentCategoryLastNodeIdx")
+	public int contentCategoryLastNodeIdx() {	  
+		return pollService.getContentCategoryLastNodeIdx();
+	}
+	
+	// parentId별 ContentCategory 다음 생성 될 Postion
 	@GetMapping("/category/contentCategoryMaxPosition/{parentId}")
 	public int contentCategoryMaxPosition(@PathVariable(value = "parentId") int parentId) {	  
 		ContentCategory categoryItem = pollService.getContentCategoryMaxPosition(parentId);
