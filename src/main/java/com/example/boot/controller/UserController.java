@@ -78,7 +78,7 @@ public class UserController {
     }
     
 	@GetMapping("/vod/list")
-	public Page<VodRepo> getTest(@PageableDefault Pageable pageable) {
+	public ResponseEntity<?> getTest(@PageableDefault Pageable pageable) {
 		System.out.println("pageable= "+pageable);
 
 //	  Iterable<VodRepo> list= pollService.getVodRepoList();
@@ -90,8 +90,12 @@ public class UserController {
 //          System.out.println("name: " + mc.getVodTitle());
 //      } // end while
 	  
-		Page<VodRepo> list= pollService.getVodRepoList(pageable);
-		return list;
+		Page<VodRepo> vodRepoList= pollService.getVodRepoList(pageable);
+		
+		HashMap< String, Object> hashMap = new HashMap<>();
+		hashMap.put("vodRepoList", vodRepoList);
+		
+		return new ResponseEntity<HashMap< String, Object>>(hashMap, HttpStatus.OK); 
 	}
 	
 	@GetMapping("/vod/list/{categoryIdx}")
