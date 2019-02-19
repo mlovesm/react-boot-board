@@ -15,8 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.boot.domain.ContentCategory;
+import com.example.boot.domain.DBFile;
 import com.example.boot.domain.VodRepo;
 import com.example.boot.repository.ContentCategoryRepository;
+import com.example.boot.repository.DBFileRepository;
 import com.example.boot.repository.VODRepository;
 
 @Service
@@ -27,6 +29,9 @@ public class PollService {
 
     @Autowired
     private VODRepository vodRepository;
+    
+    @Autowired
+    private DBFileRepository dbFileRepository;
     
     private static final Logger logger = LoggerFactory.getLogger(PollService.class);
 
@@ -123,6 +128,13 @@ public class PollService {
     		// 반복
     		removeContentCategory(idx);
     	}
+    }
+    
+    // DBFile 아이템
+    public DBFile getDBFileItem(String id) {
+    	DBFile dbFile = dbFileRepository.findById(id).orElse(new DBFile());
+
+    	return dbFile;
     }
     
     // vod 추가

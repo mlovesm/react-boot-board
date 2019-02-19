@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.boot.domain.ContentCategory;
+import com.example.boot.domain.DBFile;
 import com.example.boot.domain.VodRepo;
 import com.example.boot.payload.ApiResponse;
 import com.example.boot.payload.ContentCategoryRequest;
@@ -175,8 +176,13 @@ public class UserController {
     		ContentCategory contentCategory = pollService.getContentCategoryItem(categoryIdx);
     		vodRepoRequest.setContentCategory(contentCategory);
     		
+    		DBFile dbFile = pollService.getDBFileItem(vodRepoRequest.getVodPath());
+    		vodRepoRequest.setDbFile(dbFile);
+    		
     		System.out.println(vodRepoRequest.toEntity().getVodTitle());
     		System.out.println(vodRepoRequest.toEntity().getContentCategory().getCategoryName());
+    		System.out.println(vodRepoRequest.getVodPath());
+    		
     		vodRepository.save(vodRepoRequest.toEntity());
 			
 		} catch (Exception e) {

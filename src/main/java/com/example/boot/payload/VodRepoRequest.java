@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.example.boot.domain.ContentCategory;
+import com.example.boot.domain.DBFile;
 import com.example.boot.domain.VodRepo;
 
 import lombok.Getter;
@@ -45,10 +46,13 @@ public class VodRepoRequest {
     private String mainThumbnail;
     
     private ContentCategory contentCategory;
+    
+    private DBFile dbFile;
 
     public VodRepo toEntity(){
         return VodRepo.builder()
         		.contentCategory(contentCategory)
+        		.dbFile(dbFile)
         		.vodTitle(vodTitle)
         		.vodPath(vodPath)
         		.vodContent(vodContent)

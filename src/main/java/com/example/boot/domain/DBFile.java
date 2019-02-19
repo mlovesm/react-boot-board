@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -36,6 +37,9 @@ public class DBFile extends DateAudit {
     private String fileType;
     
     private int refIdx;
+    
+    @OneToOne(mappedBy = "dbFile")
+    private VodRepo vodRepo;
 
 //    @Lob
 //    private byte[] data;

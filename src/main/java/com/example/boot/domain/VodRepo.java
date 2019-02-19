@@ -1,5 +1,6 @@
 package com.example.boot.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -28,9 +30,6 @@ public class VodRepo extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
-
-    @Column(length= 100)
-    private String vodPath;
 
     @NotBlank
     @Column(length= 100)
@@ -62,7 +61,11 @@ public class VodRepo extends DateAudit {
     private int viewCount;
         
     private String mainThumbnail;
-
+    
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "vod_path", nullable = false)
+    @JsonBackReference
+    private DBFile dbFile;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name ="category_idx", nullable = false)
@@ -74,8 +77,8 @@ public class VodRepo extends DateAudit {
 	public VodRepo(Long idx, String vodPath, @NotBlank String vodTitle, String vodContent,
 			String vodKeyword, @Size(max = 10) String vodPlayTime, 
 			String regId, String regIp, String delFlag, String transOption,
-			int favoriteCount, int viewCount, String mainThumbnail, ContentCategory contentCategory) {
-		this.vodPath = vodPath;
+			int favoriteCount, int viewCount, String mainThumbnail, 
+			DBFile dbFile, ContentCategory contentCategory) {
 		this.vodTitle = vodTitle;
 		this.vodContent = vodContent;
 		this.vodKeyword = vodKeyword;
@@ -88,6 +91,7 @@ public class VodRepo extends DateAudit {
 		this.viewCount = viewCount;
 		this.mainThumbnail = mainThumbnail;
 		this.contentCategory = contentCategory;
+		this.dbFile = dbFile;
 	}
 
 
