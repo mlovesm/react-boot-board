@@ -99,12 +99,11 @@ public class UserController {
 		return new ResponseEntity<HashMap< String, Object>>(hashMap, HttpStatus.OK); 
 	}
 	
-	@GetMapping("/vod/list/{categoryIdx}")
-	public ResponseEntity<?> contentCategory(@PathVariable(value = "categoryIdx") int categoryIdx, Pageable pageable) {	  
-		Page<VodRepo> vodRepoList = pollService.getIdxVodRepoList(categoryIdx, pageable);
+	@GetMapping("/vod/vodRepo/{idx}")
+	public ResponseEntity<?> vodRepoItem(@PathVariable(value = "idx") long idx) {	  
+		VodRepo vodRepo = pollService.getVodRepoItem(idx);
 		HashMap< String, Object> hashMap = new HashMap<>();
-		hashMap.put("vodRepoList", vodRepoList);
-		hashMap.put("selectedKey", categoryIdx);
+		hashMap.put("vodRepo", vodRepo);
 		
 		return new ResponseEntity<HashMap< String, Object>>(hashMap, HttpStatus.OK); 
 	}

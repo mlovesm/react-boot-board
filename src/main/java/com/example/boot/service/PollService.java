@@ -137,9 +137,9 @@ public class PollService {
     	return dbFile;
     }
     
-    // vod 추가
-    public void insertVodRepo(long idx) { 
-
+	// vodRepo 상세
+    public VodRepo getVodRepoItem(long idx) {
+    	return vodRepository.findById(idx).orElse(new VodRepo());
     }
 
 
