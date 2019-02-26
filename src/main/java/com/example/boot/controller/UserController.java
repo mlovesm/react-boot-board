@@ -104,6 +104,8 @@ public class UserController {
 		VodRepo vodRepo = pollService.getVodRepoItem(idx);
 		HashMap< String, Object> hashMap = new HashMap<>();
 		hashMap.put("vodRepo", vodRepo);
+		hashMap.put("dbFileId", vodRepo.getDbFile().getId());
+		hashMap.put("categoryIdx", vodRepo.getContentCategory().getIdx());
 		
 		return new ResponseEntity<HashMap< String, Object>>(hashMap, HttpStatus.OK); 
 	}
