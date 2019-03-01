@@ -6,8 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,8 +30,6 @@ public class PollService {
     
     @Autowired
     private DBFileRepository dbFileRepository;
-    
-    private static final Logger logger = LoggerFactory.getLogger(PollService.class);
 
     
     public Page<VodRepo> getVodRepoList(Pageable pageable) {
@@ -41,9 +37,7 @@ public class PollService {
         pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1, pageable.getPageSize()
         		, pageable.getSort());
 
-    	Page<VodRepo> list= vodRepository.findAll(pageable);
-    	logger.debug("list="+ list); 
-    	return list;
+        return vodRepository.findAll(pageable);
     }
     
     public Page<VodRepo> getIdxVodRepoList(int categoryIdx, Pageable pageable) {
@@ -51,9 +45,7 @@ public class PollService {
         		, pageable.getSort());
     	
     	ContentCategory category = getContentCategoryItem(categoryIdx);
-    	Page<VodRepo> list= vodRepository.findByContentCategory(category, pageable);
-        
-    	return list;
+    	return vodRepository.findByContentCategory(category, pageable);
     }
     
     public List<HashMap<String, Object>> getContentCategory(long idx) {
@@ -80,9 +72,7 @@ public class PollService {
     
     // 카테고리 아이템
     public ContentCategory getContentCategoryItem(long idx) {
-    	ContentCategory category = contentCategoryRepository.findById(idx).orElse(new ContentCategory());
-
-    	return category;
+    	return contentCategoryRepository.findById(idx).orElse(new ContentCategory());
     }
     
     // ContentCategory 마지막 노드의 IDX
@@ -107,9 +97,35 @@ public class PollService {
     
     // parentId별 카테고리 count
     public ContentCategory getContentCategoryMaxPosition(int parentId) {
-    	ContentCategory maxPosotionItem = contentCategoryRepository.findTopByParentIdOrderByPositionDesc(parentId);
-
-    	return maxPosotionItem;
+    	return contentCategoryRepository.findTopByParentIdOrderByPositionDesc(parentId);
+    }
+    
+    // 해당 카테고리의 자식노드가 있는지 확인 ( 0이면 없음 )
+    public int getContentCategoryChildrenIdx(long idx) {   	
+        ContentCategory contentCategory = contentCategoryRepository.findTopByParentIdOrderByIdxDesc((int)idx);
+		int itemIdx = Optional.ofNullable(contentCategory)
+				.map(ContentCategory::getIdx)
+				.map(Long::intValue).orElse(0);
+		
+		return itemIdx;
+    }
+    
+    // 해당 카테고리가 속한 그룹 노드 (배열 값)
+    public ArrayList<Integer> getContentCategoryGroupIdx(long idx) {
+    	ArrayList<Integer> categoryIdxList = new ArrayList<>();
+    	
+		while(true) {
+	    	int parentId = contentCategoryRepository.findById(idx)
+	    			.map(ContentCategory::getParentId).orElse(0);
+			
+	    	categoryIdxList.add((int)idx);
+			if(parentId != 0) {
+				idx = parentId;
+			}else {
+				break;
+			}
+		}
+		return categoryIdxList;
     }
     
     // 카테고리 삭제
@@ -132,9 +148,7 @@ public class PollService {
     
     // DBFile 아이템
     public DBFile getDBFileItem(String id) {
-    	DBFile dbFile = dbFileRepository.findById(id).orElse(new DBFile());
-
-    	return dbFile;
+    	return dbFileRepository.findById(id).orElse(new DBFile());
     }
     
 	// vodRepo 상세

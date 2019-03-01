@@ -1,5 +1,6 @@
 package com.example.boot.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -99,13 +100,33 @@ public class UserController {
 		return new ResponseEntity<HashMap< String, Object>>(hashMap, HttpStatus.OK); 
 	}
 	
+	// 해당 카테고리의 VOD
+	@GetMapping("/vod/list/{categoryIdx}")
+	public ResponseEntity<?> contentCategory(@PathVariable(value = "categoryIdx") int categoryIdx, Pageable pageable) {	  
+		Page<VodRepo> vodRepoList = pollService.getIdxVodRepoList(categoryIdx, pageable);
+		HashMap< String, Object> hashMap = new HashMap<>();
+		hashMap.put("vodRepoList", vodRepoList);
+		hashMap.put("selectedKey", categoryIdx);
+		
+		return new ResponseEntity<HashMap< String, Object>>(hashMap, HttpStatus.OK); 
+	}
+	
+	// Contents 상세
 	@GetMapping("/vod/vodRepo/{idx}")
 	public ResponseEntity<?> vodRepoItem(@PathVariable(value = "idx") long idx) {	  
 		VodRepo vodRepo = pollService.getVodRepoItem(idx);
+		System.out.println(vodRepo);
+		String dbFileId = Optional.ofNullable(vodRepo)
+				.map(VodRepo::getDbFile)
+				.map(DBFile::getId).orElse(null);
+		long categoryIdx = Optional.ofNullable(vodRepo)
+				.map(VodRepo::getContentCategory)
+				.map(ContentCategory::getIdx).orElse(0L);
+			
 		HashMap< String, Object> hashMap = new HashMap<>();
 		hashMap.put("vodRepo", vodRepo);
-		hashMap.put("dbFileId", vodRepo.getDbFile().getId());
-		hashMap.put("categoryIdx", vodRepo.getContentCategory().getIdx());
+		hashMap.put("dbFileId", dbFileId);
+		hashMap.put("categoryIdx", categoryIdx);
 		
 		return new ResponseEntity<HashMap< String, Object>>(hashMap, HttpStatus.OK); 
 	}
@@ -120,8 +141,7 @@ public class UserController {
 	
 	@GetMapping("/vod/contentCategory/{idx}")
 	public ContentCategory contentCategoryItem(@PathVariable(value = "idx") int idx) {	  
-		ContentCategory category = pollService.getContentCategoryItem(idx);
-		return category; 
+		return pollService.getContentCategoryItem(idx);
 	}
 	
 	// ContentCategory 마지막 노드의 IDX
@@ -130,7 +150,21 @@ public class UserController {
 		return pollService.getContentCategoryLastNodeIdx();
 	}
 	
-	// parentId별 ContentCategory 다음 생성 될 Postion
+	// ContentCategory 하위 노드 있는지 체크
+	@GetMapping("/category/childrenIdx/{idx}")
+	public int contentCategoryChildrenIdx(@PathVariable(value = "idx") int idx) {	  
+		return pollService.getContentCategoryChildrenIdx(idx);
+	}
+	
+	// ContentCategory 해당 카테고리가 속한 그룹 노드 (배열 값)
+	@GetMapping("/category/groupIdx/{idx}")
+	public ResponseEntity<?> contentCategoryGroupIdx(@PathVariable(value = "idx") long idx) {	  
+		ArrayList<Integer> categoryIdxList = pollService.getContentCategoryGroupIdx(idx);
+		
+		return ResponseEntity.ok().body(categoryIdxList);
+	}
+	
+	// parentId별 ContentCategory 다음 생성 될 Position
 	@GetMapping("/category/contentCategoryMaxPosition/{parentId}")
 	public int contentCategoryMaxPosition(@PathVariable(value = "parentId") int parentId) {	  
 		ContentCategory categoryItem = pollService.getContentCategoryMaxPosition(parentId);
