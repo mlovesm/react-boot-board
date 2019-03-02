@@ -2,6 +2,7 @@ package com.example.boot.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -115,18 +116,23 @@ public class UserController {
 	@GetMapping("/vod/vodRepo/{idx}")
 	public ResponseEntity<?> vodRepoItem(@PathVariable(value = "idx") long idx) {	  
 		VodRepo vodRepo = pollService.getVodRepoItem(idx);
-		System.out.println(vodRepo);
-		String dbFileId = Optional.ofNullable(vodRepo)
-				.map(VodRepo::getDbFile)
-				.map(DBFile::getId).orElse(null);
+		
+		DBFile dbFile = Optional.ofNullable(vodRepo.getDbFile()).orElse(new DBFile());
+		
 		long categoryIdx = Optional.ofNullable(vodRepo)
 				.map(VodRepo::getContentCategory)
 				.map(ContentCategory::getIdx).orElse(0L);
 			
 		HashMap< String, Object> hashMap = new HashMap<>();
+		LinkedHashMap<String, Object> linkedHashMap = new LinkedHashMap<>();
+		linkedHashMap.put("id", dbFile.getId());
+		linkedHashMap.put("originalFileName", dbFile.getOriginalFileName());
+		linkedHashMap.put("fileSize", dbFile.getFileSize());
+		linkedHashMap.put("fileType", dbFile.getFileType());
+		
 		hashMap.put("vodRepo", vodRepo);
-		hashMap.put("dbFileId", dbFileId);
 		hashMap.put("categoryIdx", categoryIdx);
+		hashMap.put("dbFile", linkedHashMap);
 		
 		return new ResponseEntity<HashMap< String, Object>>(hashMap, HttpStatus.OK); 
 	}

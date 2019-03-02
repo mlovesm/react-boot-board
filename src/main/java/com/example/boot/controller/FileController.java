@@ -37,15 +37,19 @@ public class FileController {
     
     @PostMapping("/uploadFile")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
+    	String status = "failed";
         String id = fileStorageService.storeFile(file);
+        if(id != null) {
+        	status = "success";
+        }
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/downloadFile/")
+                .path("/downloadFile/vod/")
                 .path(id)
                 .toUriString();
 
         return new UploadFileResponse(id, file.getOriginalFilename(), fileDownloadUri,
-                file.getContentType(), file.getSize());
+                file.getContentType(), file.getSize(), status);
     }
 
     @PostMapping("/uploadMultipleFiles")
