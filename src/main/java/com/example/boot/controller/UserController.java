@@ -104,6 +104,8 @@ public class UserController {
 	// 해당 카테고리의 VOD
 	@GetMapping("/vod/list/{categoryIdx}")
 	public ResponseEntity<?> contentCategory(@PathVariable(value = "categoryIdx") int categoryIdx, Pageable pageable) {	  
+		pollService.getContentCategoryChildrenIdx(categoryIdx);
+		
 		Page<VodRepo> vodRepoList = pollService.getIdxVodRepoList(categoryIdx, pageable);
 		HashMap< String, Object> hashMap = new HashMap<>();
 		hashMap.put("vodRepoList", vodRepoList);
@@ -150,7 +152,7 @@ public class UserController {
 		return pollService.getContentCategoryItem(idx);
 	}
 	
-	// ContentCategory 마지막 노드의 IDX
+	// ContentCategory 마지막 노드의 IDX (현재 쓰이지 않음)
 	@GetMapping("/category/contentCategoryLastNodeIdx")
 	public int contentCategoryLastNodeIdx() {	  
 		return pollService.getContentCategoryLastNodeIdx();
@@ -166,6 +168,14 @@ public class UserController {
 	@GetMapping("/category/groupIdx/{idx}")
 	public ResponseEntity<?> contentCategoryGroupIdx(@PathVariable(value = "idx") long idx) {	  
 		ArrayList<Integer> categoryIdxList = pollService.getContentCategoryGroupIdx(idx);
+		
+		return ResponseEntity.ok().body(categoryIdxList);
+	}
+	
+	// ContentCategory 해당 카테고리가 속한 모든 하위 노드 (배열 값)
+	@GetMapping("/category/allChildIdx/{parentId}")
+	public ResponseEntity<?> contentCategoryAllChildIdx(@PathVariable(value = "parentId") int parentId) {	  
+		ArrayList<Integer> categoryIdxList = pollService.getContentCategoryAllChildIdx(parentId);
 		
 		return ResponseEntity.ok().body(categoryIdxList);
 	}

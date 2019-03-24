@@ -128,6 +128,21 @@ public class PollService {
 		return categoryIdxList;
     }
     
+    // 해당 카테고리가 속한 모든 하위 노드 (배열 값) 트리 클릭 시 적용
+    public ArrayList<Integer> getContentCategoryAllChildIdx(int parentId) {
+    	ArrayList<Integer> categoryIdxList = new ArrayList<>();
+    	categoryIdxList.add(parentId);
+    	while(true) {
+        	List<ContentCategory> parentIdList = contentCategoryRepository.findByParentIdOrderByPosition(parentId);
+        	for (ContentCategory contentCategory : parentIdList) {
+    			parentId = contentCategory.getIdx().intValue();
+    			categoryIdxList.add(parentId);
+    		}
+        	if(parentIdList.size() == 0) break;
+    	}
+		return categoryIdxList;
+    }
+    
     // 카테고리 삭제
     public void removeContentCategory(long idx) { 
     	ContentCategory category = contentCategoryRepository.findById(idx).orElse(new ContentCategory());
