@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.boot.domain.ContentCategory;
 
 public interface ContentCategoryRepository extends JpaRepository<ContentCategory, Long> {
+	
+	List<ContentCategory> findByIdxIn(List<Long> categoryIdxList);	// 배열 카테고리
 			
 	List<ContentCategory> findByParentIdOrderByIdx(int parentId);	// 상위 카테고리
 		

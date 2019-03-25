@@ -37,8 +37,8 @@ public class ContentCategory extends DateAudit {
     private String property;
 
     
-    @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy="contentCategory")
+    @JsonManagedReference("contentCategory")
     private Set<VodRepo> vodRepository = new HashSet<>();
 
     @Builder

@@ -104,7 +104,7 @@ public class UserController {
 	// 해당 카테고리의 VOD
 	@GetMapping("/vod/list/{categoryIdx}")
 	public ResponseEntity<?> contentCategory(@PathVariable(value = "categoryIdx") int categoryIdx, Pageable pageable) {	  
-		pollService.getContentCategoryChildrenIdx(categoryIdx);
+		//pollService.getContentCategoryChildrenIdx(categoryIdx);
 		
 		Page<VodRepo> vodRepoList = pollService.getIdxVodRepoList(categoryIdx, pageable);
 		HashMap< String, Object> hashMap = new HashMap<>();
@@ -173,12 +173,12 @@ public class UserController {
 	}
 	
 	// ContentCategory 해당 카테고리가 속한 모든 하위 노드 (배열 값)
-	@GetMapping("/category/allChildIdx/{parentId}")
-	public ResponseEntity<?> contentCategoryAllChildIdx(@PathVariable(value = "parentId") int parentId) {	  
-		ArrayList<Integer> categoryIdxList = pollService.getContentCategoryAllChildIdx(parentId);
-		
-		return ResponseEntity.ok().body(categoryIdxList);
-	}
+//	@GetMapping("/category/allChildIdx/{parentId}")
+//	public ResponseEntity<?> contentCategoryAllChildIdx(@PathVariable(value = "parentId") int parentId) {	  
+//		ArrayList<Long> categoryIdxList = pollService.getContentCategoryAllChildIdx(parentId);
+//		
+//		return ResponseEntity.ok().body(categoryIdxList);
+//	}
 	
 	// parentId별 ContentCategory 다음 생성 될 Position
 	@GetMapping("/category/contentCategoryMaxPosition/{parentId}")

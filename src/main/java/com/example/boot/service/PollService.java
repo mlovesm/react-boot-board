@@ -43,9 +43,12 @@ public class PollService {
     public Page<VodRepo> getIdxVodRepoList(int categoryIdx, Pageable pageable) {
         pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1, pageable.getPageSize()
         		, pageable.getSort());
-    	
-    	ContentCategory category = getContentCategoryItem(categoryIdx);
-    	return vodRepository.findByContentCategory(category, pageable);
+        
+        
+        //배열 카테고리 테스트
+        List<Long> categoryIdxList = getContentCategoryAllChildIdx(categoryIdx);
+        List<ContentCategory> categoryList = contentCategoryRepository.findByIdxIn(categoryIdxList);
+    	return vodRepository.findByContentCategoryIn(categoryList, pageable);
     }
     
     public List<HashMap<String, Object>> getContentCategory(long idx) {
@@ -129,14 +132,14 @@ public class PollService {
     }
     
     // 해당 카테고리가 속한 모든 하위 노드 (배열 값) 트리 클릭 시 적용
-    public ArrayList<Integer> getContentCategoryAllChildIdx(int parentId) {
-    	ArrayList<Integer> categoryIdxList = new ArrayList<>();
-    	categoryIdxList.add(parentId);
+    public ArrayList<Long> getContentCategoryAllChildIdx(int parentId) {
+    	ArrayList<Long> categoryIdxList = new ArrayList<>();
+    	categoryIdxList.add((long)parentId);
     	while(true) {
         	List<ContentCategory> parentIdList = contentCategoryRepository.findByParentIdOrderByPosition(parentId);
         	for (ContentCategory contentCategory : parentIdList) {
     			parentId = contentCategory.getIdx().intValue();
-    			categoryIdxList.add(parentId);
+    			categoryIdxList.add((long)parentId);
     		}
         	if(parentIdList.size() == 0) break;
     	}

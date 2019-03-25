@@ -1,5 +1,7 @@
 package com.example.boot.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +19,7 @@ public interface VODRepository extends JpaRepository<VodRepo, Long> {
 	Page<VodRepo> findByVodTitle(@Param("vodTitle") String vodTitle, Pageable pageable);
 	
 	Page<VodRepo> findByContentCategory(ContentCategory category, Pageable pageable);
+	
+	Page<VodRepo> findByContentCategoryIn(List<ContentCategory> category, Pageable pageable);
 	
 }

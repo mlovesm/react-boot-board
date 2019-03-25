@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.example.boot.domain.audit.DateAudit;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -39,6 +40,7 @@ public class DBFile extends DateAudit {
     private int refIdx;
     
     @OneToOne(mappedBy = "dbFile")
+    @JsonManagedReference
     private VodRepo vodRepo;
 
 //    @Lob

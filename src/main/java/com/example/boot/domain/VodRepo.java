@@ -16,6 +16,8 @@ import javax.validation.constraints.Size;
 
 import com.example.boot.domain.audit.DateAudit;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +28,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Table(name = "vod_repository")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idx")
 public class VodRepo extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,7 +72,7 @@ public class VodRepo extends DateAudit {
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name ="category_idx", nullable = false)
-	@JsonBackReference	//child
+	@JsonBackReference("contentCategory")
     private ContentCategory contentCategory;
 	
 	
