@@ -44,7 +44,6 @@ public class PollService {
         pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1, pageable.getPageSize()
         		, pageable.getSort());
         
-        
         //배열 카테고리 테스트
         List<Long> categoryIdxList = getContentCategoryAllChildIdx(categoryIdx);
         List<ContentCategory> categoryList = contentCategoryRepository.findByIdxIn(categoryIdxList);
@@ -57,8 +56,8 @@ public class PollService {
 
         for (int i = 0; i < parentCategoryList.size(); i++) {
         	LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-        	map.put("value", parentCategoryList.get(i).getIdx());
         	long parentIdx= parentCategoryList.get(i).getIdx();
+        	map.put("value", parentIdx);
         	map.put("label", parentCategoryList.get(i).getCategoryName());
         	map.put("parentId", parentCategoryList.get(i).getParentId());
         	map.put("vodSize", parentCategoryList.get(i).getVodRepository().size());	
