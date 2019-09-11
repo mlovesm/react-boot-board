@@ -39,7 +39,7 @@ public class LiveService {
         pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1, pageable.getPageSize()
         		, pageable.getSort());
         
-        //¹è¿­ Ä«Å×°í¸® Å×½ºÆ®
+        //ë°°ì—´ ì¹´í…Œê³ ë¦¬ í…ŒìŠ¤íŠ¸
         List<Long> categoryIdxList = getContentCategoryAllChildIdx(categoryIdx);
         List<LiveCategory> categoryList = liveCategoryRepository.findByIdxIn(categoryIdxList);
     	return liveRepository.findByContentCategoryIn(categoryList, pageable);
@@ -67,12 +67,12 @@ public class LiveService {
         return mapList; 
     }
     
-    // Ä«Å×°í¸® ¾ÆÀÌÅÛ
+    // ì¹´í…Œê³ ë¦¬ ì•„ì´í…œ
     public LiveCategory getContentCategoryItem(long idx) {
     	return liveCategoryRepository.findById(idx).orElse(new LiveCategory());
     }
     
-    // ContentCategory ¸¶Áö¸· ³ëµåÀÇ IDX
+    // ContentCategory ë§ˆì§€ë§‰ ë…¸ë“œì˜ IDX
 	public int getContentCategoryLastNodeIdx() {
 		int categoryIdx = 0;
 		
@@ -92,12 +92,12 @@ public class LiveService {
     	return categoryIdx;
     }
     
-    // parentIdº° Ä«Å×°í¸® count
+    // parentIdë³„ ì¹´í…Œê³ ë¦¬ count
     public LiveCategory getContentCategoryMaxPosition(int parentId) {
     	return liveCategoryRepository.findTopByParentIdOrderByPositionDesc(parentId);
     }
     
-    // ÇØ´ç Ä«Å×°í¸®ÀÇ ÀÚ½Ä³ëµå°¡ ÀÖ´ÂÁö È®ÀÎ ( 0ÀÌ¸é ¾øÀ½ )
+    // í•´ë‹¹ ì¹´í…Œê³ ë¦¬ì˜ ìì‹ë…¸ë“œê°€ ìˆëŠ”ì§€ í™•ì¸ ( 0ì´ë©´ ì—†ìŒ )
     public int getContentCategoryChildrenIdx(long idx) {   	
     	LiveCategory contentCategory = liveCategoryRepository.findTopByParentIdOrderByIdxDesc((int)idx);
 		int itemIdx = Optional.ofNullable(contentCategory)
@@ -107,7 +107,7 @@ public class LiveService {
 		return itemIdx;
     }
     
-    // ÇØ´ç Ä«Å×°í¸®°¡ ¼ÓÇÑ ±×·ì ³ëµå (¹è¿­ °ª)
+    // í•´ë‹¹ ì¹´í…Œê³ ë¦¬ê°€ ì†í•œ ê·¸ë£¹ ë…¸ë“œ (ë°°ì—´ ê°’)
     public ArrayList<Integer> getContentCategoryGroupIdx(long idx) {
     	ArrayList<Integer> categoryIdxList = new ArrayList<>();
     	
@@ -125,7 +125,7 @@ public class LiveService {
 		return categoryIdxList;
     }
     
-    // ÇØ´ç Ä«Å×°í¸®°¡ ¼ÓÇÑ ¸ğµç ÇÏÀ§ ³ëµå (¹è¿­ °ª) Æ®¸® Å¬¸¯ ½Ã Àû¿ë
+    // í•´ë‹¹ ì¹´í…Œê³ ë¦¬ê°€ ì†í•œ ëª¨ë“  í•˜ìœ„ ë…¸ë“œ (ë°°ì—´ ê°’) íŠ¸ë¦¬ í´ë¦­ ì‹œ ì ìš©
     public ArrayList<Long> getContentCategoryAllChildIdx(int parentId) {
     	ArrayList<Long> categoryIdxList = new ArrayList<>();
     	categoryIdxList.add((long)parentId);
@@ -140,25 +140,25 @@ public class LiveService {
 		return categoryIdxList;
     }
     
-    // Ä«Å×°í¸® »èÁ¦
+    // ì¹´í…Œê³ ë¦¬ ì‚­ì œ
     public void removeContentCategory(long idx) { 
     	LiveCategory category = liveCategoryRepository.findById(idx).orElse(new LiveCategory());
     	if(category.getIdx() != null) {
-    		liveCategoryRepository.deleteById(idx);	// »óÀ§ »èÁ¦
-    		System.out.println("»èÁ¦ idx="+idx);
+    		liveCategoryRepository.deleteById(idx);	// ìƒìœ„ ì‚­ì œ
+    		System.out.println("ì‚­ì œ idx="+idx);
     	}
     	List<LiveCategory> categoryList = liveCategoryRepository.findByParentIdOrderByPosition((int)idx);
-    	if(categoryList.size() > 0) {	// ÇÏÀ§ Ä«Å×°í¸®°¡ ÀÖÀ¸¸é °°ÀÌ »èÁ¦
-    		liveCategoryRepository.deleteByParentId((int)idx);	// ÇÏÀ§ »èÁ¦
-    		System.out.println("»èÁ¦ idx="+categoryList.get(0).getIdx());
+    	if(categoryList.size() > 0) {	// í•˜ìœ„ ì¹´í…Œê³ ë¦¬ê°€ ìˆìœ¼ë©´ ê°™ì´ ì‚­ì œ
+    		liveCategoryRepository.deleteByParentId((int)idx);	// í•˜ìœ„ ì‚­ì œ
+    		System.out.println("ì‚­ì œ idx="+categoryList.get(0).getIdx());
     		
     		idx = categoryList.get(0).getIdx();
-    		// ¹İº¹
+    		// ë°˜ë³µ
     		removeContentCategory(idx);
     	}
     }
     
-	// LiveRepo »ó¼¼
+	// LiveRepo ìƒì„¸
     public LiveRepo getLiveRepoItem(long idx) {
     	return liveRepository.findById(idx).orElse(new LiveRepo());
     }

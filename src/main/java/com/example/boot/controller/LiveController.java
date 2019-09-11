@@ -56,19 +56,19 @@ public class LiveController {
 		return liveService.getContentCategoryItem(idx);
 	}
 	
-	// liveCategory ¸¶Áö¸· ³ëµåÀÇ IDX (ÇöÀç ¾²ÀÌÁö ¾ÊÀ½)
+	// liveCategory ë§ˆì§€ë§‰ ë…¸ë“œì˜ IDX (í˜„ì¬ ì“°ì´ì§€ ì•ŠìŒ)
 	@GetMapping("/category/liveCategoryLastNodeIdx")
 	public int liveCategoryLastNodeIdx() {	  
 		return liveService.getContentCategoryLastNodeIdx();
 	}
 	
-	// liveCategory ÇÏÀ§ ³ëµå ÀÖ´ÂÁö Ã¼Å©
+	// liveCategory í•˜ìœ„ ë…¸ë“œ ìˆëŠ”ì§€ ì²´í¬
 	@GetMapping("/category/childrenIdx/{idx}")
 	public int liveCategoryChildrenIdx(@PathVariable(value = "idx") int idx) {	  
 		return liveService.getContentCategoryChildrenIdx(idx);
 	}
 	
-	// liveCategory ÇØ´ç Ä«Å×°í¸®°¡ ¼ÓÇÑ ±×·ì ³ëµå (¹è¿­ °ª)
+	// liveCategory í•´ë‹¹ ì¹´í…Œê³ ë¦¬ê°€ ì†í•œ ê·¸ë£¹ ë…¸ë“œ (ë°°ì—´ ê°’)
 	@GetMapping("/category/groupIdx/{idx}")
 	public ResponseEntity<?> liveCategoryGroupIdx(@PathVariable(value = "idx") long idx) {	  
 		ArrayList<Integer> categoryIdxList = liveService.getContentCategoryGroupIdx(idx);
@@ -76,7 +76,7 @@ public class LiveController {
 		return ResponseEntity.ok().body(categoryIdxList);
 	}
 	
-	// liveCategory ÇØ´ç Ä«Å×°í¸®°¡ ¼ÓÇÑ ¸ğµç ÇÏÀ§ ³ëµå (¹è¿­ °ª)
+	// liveCategory í•´ë‹¹ ì¹´í…Œê³ ë¦¬ê°€ ì†í•œ ëª¨ë“  í•˜ìœ„ ë…¸ë“œ (ë°°ì—´ ê°’)
 //	@GetMapping("/category/allChildIdx/{parentId}")
 //	public ResponseEntity<?> liveCategoryAllChildIdx(@PathVariable(value = "parentId") int parentId) {	  
 //		ArrayList<Long> categoryIdxList = liveService.getliveCategoryAllChildIdx(parentId);
@@ -84,7 +84,7 @@ public class LiveController {
 //		return ResponseEntity.ok().body(categoryIdxList);
 //	}
 	
-	// parentIdº° liveCategory ´ÙÀ½ »ı¼º µÉ Position
+	// parentIdë³„ liveCategory ë‹¤ìŒ ìƒì„± ë  Position
 	@GetMapping("/category/liveCategoryMaxPosition/{parentId}")
 	public int liveCategoryMaxPosition(@PathVariable(value = "parentId") int parentId) {	  
 		LiveCategory categoryItem = liveService.getContentCategoryMaxPosition(parentId);
@@ -95,7 +95,7 @@ public class LiveController {
 		return position;
 	}
 	
-	// Ä«Å×°í¸® µî·Ï
+	// ì¹´í…Œê³ ë¦¬ ë“±ë¡
     @PostMapping("/category/liveCategory")
     public ResponseEntity<?> createliveCategory(@Valid @RequestBody categoryRequest request) {
     	try {
@@ -108,7 +108,7 @@ public class LiveController {
     	return ResponseEntity.ok().body(new ApiResponse(true, "Category created successfully"));
     }
     
-    // Ä«Å×°í¸® »èÁ¦
+    // ì¹´í…Œê³ ë¦¬ ì‚­ì œ
 	@DeleteMapping("/category/liveCategory")
     public ResponseEntity<?> removeliveCategory(@RequestParam(value = "idx") long idx) {
     	try {

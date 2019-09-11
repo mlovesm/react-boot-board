@@ -95,7 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
 	                
 	            .and()
-	                .headers().frameOptions().disable()	//XFrameOptionsHeaderWriterÀÇ ÃÖÀûÈ­ ¼³Á¤À» Çã¿ë¾ÈÇÔ
+	                .headers().frameOptions().disable()	//XFrameOptionsHeaderWriterì˜ ìµœì í™” ì„¤ì •ì„ í—ˆìš©ì•ˆí•¨
 	            .and()
 	//            .and()
 	//                .formLogin()
@@ -106,7 +106,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	//                .logoutSuccessUrl("/")
 	//                .deleteCookies("JSESSIONID")
 	//                .invalidateHttpSession(true)
-	                .addFilterBefore(filter, CsrfFilter.class)	//Ã¹¹øÂ° ÀÎÀÚº¸´Ù ¸ÕÀú ½ÃÀÛµÉ ÇÊÅÍ µî·Ï
+	                .addFilterBefore(filter, CsrfFilter.class)	//ì²«ë²ˆì§¸ ì¸ìë³´ë‹¤ ë¨¼ì € ì‹œì‘ë  í•„í„° ë“±ë¡
 	                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         
         // Add our custom JWT security filter

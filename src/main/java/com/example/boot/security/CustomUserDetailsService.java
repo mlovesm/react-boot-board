@@ -21,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String usernameOrEmail)	// À¯Àú¿¡ ´ëÇÑ ÀÎÁõ Á¤º¸ ·Îµå
+    public UserDetails loadUserByUsername(String usernameOrEmail)	// ìœ ì €ì— ëŒ€í•œ ì¸ì¦ ì •ë³´ ë¡œë“œ
             throws UsernameNotFoundException {
         // Let people login with either username or email
         User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)

@@ -9,17 +9,17 @@ import com.example.boot.domain.LiveCategory;
 
 public interface LiveCategoryRepository extends JpaRepository<LiveCategory, Long> {
 	
-	List<LiveCategory> findByIdxIn(List<Long> categoryIdxList);	// ¹è¿­ Ä«Å×°í¸®
+	List<LiveCategory> findByIdxIn(List<Long> categoryIdxList);	// ë°°ì—´ ì¹´í…Œê³ ë¦¬
 			
-	List<LiveCategory> findByParentIdOrderByIdx(int parentId);	// »óÀ§ Ä«Å×°í¸®
+	List<LiveCategory> findByParentIdOrderByIdx(int parentId);	// ìƒìœ„ ì¹´í…Œê³ ë¦¬
 		
-	List<LiveCategory> findByParentIdOrderByPosition(int parentId);	// ÇÏÀ§ Ä«Å×°í¸®
+	List<LiveCategory> findByParentIdOrderByPosition(int parentId);	// í•˜ìœ„ ì¹´í…Œê³ ë¦¬
 	
-	LiveCategory findTopByParentIdOrderByIdxDesc(int parentId);	// »óÀ§ Ä«Å×°í¸® Áß ¸Ç ¸¶Áö¸· ³ëµå
+	LiveCategory findTopByParentIdOrderByIdxDesc(int parentId);	// ìƒìœ„ ì¹´í…Œê³ ë¦¬ ì¤‘ ë§¨ ë§ˆì§€ë§‰ ë…¸ë“œ
 	
 	LiveCategory findTopByParentIdOrderByPositionDesc(int parentId);	// position max
 		
-	Long removeByParentId(int parentId);	// ÇÏÀ§Ä«Å×°í¸® »èÁ¦
+	Long removeByParentId(int parentId);	// í•˜ìœ„ì¹´í…Œê³ ë¦¬ ì‚­ì œ
 	
     @Transactional
 	int deleteByParentId(int parentId);

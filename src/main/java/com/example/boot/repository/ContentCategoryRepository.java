@@ -9,17 +9,17 @@ import com.example.boot.domain.ContentCategory;
 
 public interface ContentCategoryRepository extends JpaRepository<ContentCategory, Long> {
 	
-	List<ContentCategory> findByIdxIn(List<Long> categoryIdxList);	// ¹è¿­ Ä«Å×°í¸®
+	List<ContentCategory> findByIdxIn(List<Long> categoryIdxList);	// ë°°ì—´ ì¹´í…Œê³ ë¦¬
 			
-	List<ContentCategory> findByParentIdOrderByIdx(int parentId);	// »óÀ§ Ä«Å×°í¸®
+	List<ContentCategory> findByParentIdOrderByIdx(int parentId);	// ìƒìœ„ ì¹´í…Œê³ ë¦¬
 		
-	List<ContentCategory> findByParentIdOrderByPosition(int parentId);	// ÇÏÀ§ Ä«Å×°í¸®
+	List<ContentCategory> findByParentIdOrderByPosition(int parentId);	// í•˜ìœ„ ì¹´í…Œê³ ë¦¬
 	
-	ContentCategory findTopByParentIdOrderByIdxDesc(int parentId);	// »óÀ§ Ä«Å×°í¸® Áß ¸Ç ¸¶Áö¸· ³ëµå
+	ContentCategory findTopByParentIdOrderByIdxDesc(int parentId);	// ìƒìœ„ ì¹´í…Œê³ ë¦¬ ì¤‘ ë§¨ ë§ˆì§€ë§‰ ë…¸ë“œ
 	
 	ContentCategory findTopByParentIdOrderByPositionDesc(int parentId);	// position max
 		
-	Long removeByParentId(int parentId);	// ÇÏÀ§Ä«Å×°í¸® »èÁ¦
+	Long removeByParentId(int parentId);	// í•˜ìœ„ì¹´í…Œê³ ë¦¬ ì‚­ì œ
 	
     @Transactional
 	int deleteByParentId(int parentId);

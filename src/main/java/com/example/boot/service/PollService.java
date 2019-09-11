@@ -44,7 +44,7 @@ public class PollService {
         pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1, pageable.getPageSize()
         		, pageable.getSort());
         
-        //¹è¿­ Ä«Å×°í¸® Å×½ºÆ®
+        //ë°°ì—´ ì¹´í…Œê³ ë¦¬ í…ŒìŠ¤íŠ¸
         List<Long> categoryIdxList = getContentCategoryAllChildIdx(categoryIdx);
         List<ContentCategory> categoryList = contentCategoryRepository.findByIdxIn(categoryIdxList);
     	return vodRepository.findByContentCategoryIn(categoryList, pageable);
@@ -72,12 +72,12 @@ public class PollService {
         return mapList; 
     }
     
-    // Ä«Å×°í¸® ¾ÆÀÌÅÛ
+    // ì¹´í…Œê³ ë¦¬ ì•„ì´í…œ
     public ContentCategory getContentCategoryItem(long idx) {
     	return contentCategoryRepository.findById(idx).orElse(new ContentCategory());
     }
     
-    // ContentCategory ¸¶Áö¸· ³ëµåÀÇ IDX
+    // ContentCategory ë§ˆì§€ë§‰ ë…¸ë“œì˜ IDX
 	public int getContentCategoryLastNodeIdx() {
 		int categoryIdx = 0;
 		
@@ -97,12 +97,12 @@ public class PollService {
     	return categoryIdx;
     }
     
-    // parentIdº° Ä«Å×°í¸® count
+    // parentIdë³„ ì¹´í…Œê³ ë¦¬ count
     public ContentCategory getContentCategoryMaxPosition(int parentId) {
     	return contentCategoryRepository.findTopByParentIdOrderByPositionDesc(parentId);
     }
     
-    // ÇØ´ç Ä«Å×°í¸®ÀÇ ÀÚ½Ä³ëµå°¡ ÀÖ´ÂÁö È®ÀÎ ( 0ÀÌ¸é ¾øÀ½ )
+    // í•´ë‹¹ ì¹´í…Œê³ ë¦¬ì˜ ìì‹ë…¸ë“œê°€ ìˆëŠ”ì§€ í™•ì¸ ( 0ì´ë©´ ì—†ìŒ )
     public int getContentCategoryChildrenIdx(long idx) {   	
         ContentCategory contentCategory = contentCategoryRepository.findTopByParentIdOrderByIdxDesc((int)idx);
 		int itemIdx = Optional.ofNullable(contentCategory)
@@ -112,7 +112,7 @@ public class PollService {
 		return itemIdx;
     }
     
-    // ÇØ´ç Ä«Å×°í¸®°¡ ¼ÓÇÑ ±×·ì ³ëµå (¹è¿­ °ª)
+    // í•´ë‹¹ ì¹´í…Œê³ ë¦¬ê°€ ì†í•œ ê·¸ë£¹ ë…¸ë“œ (ë°°ì—´ ê°’)
     public ArrayList<Integer> getContentCategoryGroupIdx(long idx) {
     	ArrayList<Integer> categoryIdxList = new ArrayList<>();
     	
@@ -130,7 +130,7 @@ public class PollService {
 		return categoryIdxList;
     }
     
-    // ÇØ´ç Ä«Å×°í¸®°¡ ¼ÓÇÑ ¸ğµç ÇÏÀ§ ³ëµå (¹è¿­ °ª) Æ®¸® Å¬¸¯ ½Ã Àû¿ë
+    // í•´ë‹¹ ì¹´í…Œê³ ë¦¬ê°€ ì†í•œ ëª¨ë“  í•˜ìœ„ ë…¸ë“œ (ë°°ì—´ ê°’) íŠ¸ë¦¬ í´ë¦­ ì‹œ ì ìš©
     public ArrayList<Long> getContentCategoryAllChildIdx(int parentId) {
     	ArrayList<Long> categoryIdxList = new ArrayList<>();
     	categoryIdxList.add((long)parentId);
@@ -145,30 +145,30 @@ public class PollService {
 		return categoryIdxList;
     }
     
-    // Ä«Å×°í¸® »èÁ¦
+    // ì¹´í…Œê³ ë¦¬ ì‚­ì œ
     public void removeContentCategory(long idx) { 
     	ContentCategory category = contentCategoryRepository.findById(idx).orElse(new ContentCategory());
     	if(category.getIdx() != null) {
-    		contentCategoryRepository.deleteById(idx);	// »óÀ§ »èÁ¦
-    		System.out.println("»èÁ¦ idx="+idx);
+    		contentCategoryRepository.deleteById(idx);	// ìƒìœ„ ì‚­ì œ
+    		System.out.println("ì‚­ì œ idx="+idx);
     	}
     	List<ContentCategory> categoryList = contentCategoryRepository.findByParentIdOrderByPosition((int)idx);
-    	if(categoryList.size() > 0) {	// ÇÏÀ§ Ä«Å×°í¸®°¡ ÀÖÀ¸¸é °°ÀÌ »èÁ¦
-    		contentCategoryRepository.deleteByParentId((int)idx);	// ÇÏÀ§ »èÁ¦
-    		System.out.println("»èÁ¦ idx="+categoryList.get(0).getIdx());
+    	if(categoryList.size() > 0) {	// í•˜ìœ„ ì¹´í…Œê³ ë¦¬ê°€ ìˆìœ¼ë©´ ê°™ì´ ì‚­ì œ
+    		contentCategoryRepository.deleteByParentId((int)idx);	// í•˜ìœ„ ì‚­ì œ
+    		System.out.println("ì‚­ì œ idx="+categoryList.get(0).getIdx());
     		
     		idx = categoryList.get(0).getIdx();
-    		// ¹İº¹
+    		// ë°˜ë³µ
     		removeContentCategory(idx);
     	}
     }
     
-    // DBFile ¾ÆÀÌÅÛ
+    // DBFile ì•„ì´í…œ
     public DBFile getDBFileItem(String id) {
     	return dbFileRepository.findById(id).orElse(new DBFile());
     }
     
-	// vodRepo »ó¼¼
+	// vodRepo ìƒì„¸
     public VodRepo getVodRepoItem(long idx) {
     	return vodRepository.findById(idx).orElse(new VodRepo());
     }

@@ -50,7 +50,7 @@ public class FileStorageService {
     }
 
     
-	//Æú´õ »ı¼º ÇÔ¼ö
+	//í´ë” ìƒì„± í•¨ìˆ˜
 	private String calcPath() {
 		LocalDate currentDate = LocalDate.now();
 		
@@ -66,7 +66,7 @@ public class FileStorageService {
 		return datePath;
 	}//calcPath
 	
-	//Æú´õ »ı¼º ÇÔ¼ö
+	//í´ë” ìƒì„± í•¨ìˆ˜
 	private void makeDir(String... paths) {
 		System.out.println("paths[paths.length -1] = "+this.fileStorageLocation + paths[paths.length -1]);
 		if(new File(this.fileStorageLocation + paths[paths.length -1]).exists()) {
@@ -89,12 +89,12 @@ public class FileStorageService {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
         try {
-            // ÆÄÀÏ ÀÌ¸§¿¡ Àß¸øµÈ ¹®ÀÚ°¡ Æ÷ÇÔµÇ¾î ÀÖ´ÂÁö
+            // íŒŒì¼ ì´ë¦„ì— ì˜ëª»ëœ ë¬¸ìê°€ í¬í•¨ë˜ì–´ ìˆëŠ”ì§€
             if(fileName.contains("..")) {
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
             
-            // DB ÀúÀå
+            // DB ì €ì¥
             DBFileRequest dbFileRequest = new DBFileRequest();
             UUID uid = UUID.randomUUID();
             dbFileRequest.setFileName(uid.toString()+"_"+fileName);
@@ -104,7 +104,7 @@ public class FileStorageService {
             
             String id = dbFileRepository.save(dbFileRequest.toEntity()).getId();     
 
-            // ´ë»ó À§Ä¡·Î ÆÄÀÏ º¹»ç(µ¿ÀÏÇÑ ÀÌ¸§À¸·Î ±âÁ¸ ÆÄÀÏ ±³Ã¼)
+            // ëŒ€ìƒ ìœ„ì¹˜ë¡œ íŒŒì¼ ë³µì‚¬(ë™ì¼í•œ ì´ë¦„ìœ¼ë¡œ ê¸°ì¡´ íŒŒì¼ êµì²´)
             Path targetLocation = Paths.get(this.fileStorageLocation + calcPath()).resolve(fileName);
             System.out.println(targetLocation);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);

@@ -70,7 +70,7 @@ public class UserController {
     @GetMapping("/user/checkUsernameAvailability")
     public UserIdentityAvailability checkUsernameAvailability(@RequestParam(value = "username") String username) {
         Boolean isAvailable = !userRepository.existsByUsername(username);
-        log.debug("µé¾î¿È"+ isAvailable);
+        log.debug("ë“¤ì–´ì˜´"+ isAvailable);
         return new UserIdentityAvailability(isAvailable);
     }
 
@@ -101,7 +101,7 @@ public class UserController {
 		return new ResponseEntity<HashMap< String, Object>>(hashMap, HttpStatus.OK); 
 	}
 	
-	// ÇØ´ç Ä«Å×°í¸®ÀÇ VOD
+	// í•´ë‹¹ ì¹´í…Œê³ ë¦¬ì˜ VOD
 	@GetMapping("/vod/list/{categoryIdx}")
 	public ResponseEntity<?> contentCategory(@PathVariable(value = "categoryIdx") int categoryIdx, Pageable pageable) {	  
 		//pollService.getContentCategoryChildrenIdx(categoryIdx);
@@ -114,7 +114,7 @@ public class UserController {
 		return new ResponseEntity<HashMap< String, Object>>(hashMap, HttpStatus.OK); 
 	}
 	
-	// Contents »ó¼¼
+	// Contents ìƒì„¸
 	@GetMapping("/vod/vodRepo/{idx}")
 	public ResponseEntity<?> vodRepoItem(@PathVariable(value = "idx") long idx) {	  
 		VodRepo vodRepo = pollService.getVodRepoItem(idx);
@@ -152,19 +152,19 @@ public class UserController {
 		return pollService.getContentCategoryItem(idx);
 	}
 	
-	// ContentCategory ¸¶Áö¸· ³ëµåÀÇ IDX (ÇöÀç ¾²ÀÌÁö ¾ÊÀ½)
+	// ContentCategory ë§ˆì§€ë§‰ ë…¸ë“œì˜ IDX (í˜„ì¬ ì“°ì´ì§€ ì•ŠìŒ)
 	@GetMapping("/category/contentCategoryLastNodeIdx")
 	public int contentCategoryLastNodeIdx() {	  
 		return pollService.getContentCategoryLastNodeIdx();
 	}
 	
-	// ContentCategory ÇÏÀ§ ³ëµå ÀÖ´ÂÁö Ã¼Å©
+	// ContentCategory í•˜ìœ„ ë…¸ë“œ ìˆëŠ”ì§€ ì²´í¬
 	@GetMapping("/category/childrenIdx/{idx}")
 	public int contentCategoryChildrenIdx(@PathVariable(value = "idx") int idx) {	  
 		return pollService.getContentCategoryChildrenIdx(idx);
 	}
 	
-	// ContentCategory ÇØ´ç Ä«Å×°í¸®°¡ ¼ÓÇÑ ±×·ì ³ëµå (¹è¿­ °ª)
+	// ContentCategory í•´ë‹¹ ì¹´í…Œê³ ë¦¬ê°€ ì†í•œ ê·¸ë£¹ ë…¸ë“œ (ë°°ì—´ ê°’)
 	@GetMapping("/category/groupIdx/{idx}")
 	public ResponseEntity<?> contentCategoryGroupIdx(@PathVariable(value = "idx") long idx) {	  
 		ArrayList<Integer> categoryIdxList = pollService.getContentCategoryGroupIdx(idx);
@@ -172,7 +172,7 @@ public class UserController {
 		return ResponseEntity.ok().body(categoryIdxList);
 	}
 	
-	// ContentCategory ÇØ´ç Ä«Å×°í¸®°¡ ¼ÓÇÑ ¸ğµç ÇÏÀ§ ³ëµå (¹è¿­ °ª)
+	// ContentCategory í•´ë‹¹ ì¹´í…Œê³ ë¦¬ê°€ ì†í•œ ëª¨ë“  í•˜ìœ„ ë…¸ë“œ (ë°°ì—´ ê°’)
 //	@GetMapping("/category/allChildIdx/{parentId}")
 //	public ResponseEntity<?> contentCategoryAllChildIdx(@PathVariable(value = "parentId") int parentId) {	  
 //		ArrayList<Long> categoryIdxList = pollService.getContentCategoryAllChildIdx(parentId);
@@ -180,7 +180,7 @@ public class UserController {
 //		return ResponseEntity.ok().body(categoryIdxList);
 //	}
 	
-	// parentIdº° ContentCategory ´ÙÀ½ »ı¼º µÉ Position
+	// parentIdë³„ ContentCategory ë‹¤ìŒ ìƒì„± ë  Position
 	@GetMapping("/category/contentCategoryMaxPosition/{parentId}")
 	public int contentCategoryMaxPosition(@PathVariable(value = "parentId") int parentId) {	  
 		ContentCategory categoryItem = pollService.getContentCategoryMaxPosition(parentId);
@@ -191,7 +191,7 @@ public class UserController {
 		return position;
 	}
 	
-	// Ä«Å×°í¸® µî·Ï
+	// ì¹´í…Œê³ ë¦¬ ë“±ë¡
     @PostMapping("/category/contentCategory")
     public ResponseEntity<?> createContentCategory(@Valid @RequestBody ContentCategoryRequest categoryRequest) {
     	try {
@@ -204,7 +204,7 @@ public class UserController {
     	return ResponseEntity.ok().body(new ApiResponse(true, "Category created successfully"));
     }
     
-    // Ä«Å×°í¸® »èÁ¦
+    // ì¹´í…Œê³ ë¦¬ ì‚­ì œ
 	@DeleteMapping("/category/contentCategory")
     public ResponseEntity<?> removeContentCategory(@RequestParam(value = "idx") long idx) {
     	try {
@@ -218,7 +218,7 @@ public class UserController {
     }
 	
 	
-	// mp4 ¿µ»ó µî·Ï
+	// mp4 ì˜ìƒ ë“±ë¡
     @PostMapping("/vod/{categoryIdx}/video")
     public ResponseEntity<?> insertVodRepository(@PathVariable (value = "categoryIdx") Long categoryIdx, 
     		@Valid @RequestBody VodRepoRequest vodRepoRequest) {
